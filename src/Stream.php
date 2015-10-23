@@ -2,6 +2,8 @@
 
 namespace Http\Socket;
 
+use Http\Socket\Exception\StreamException;
+use Http\Socket\Exception\TimeoutException;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -117,7 +119,7 @@ class Stream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        throw new \RuntimeException("This stream is not seekable");
+        throw new StreamException("This stream is not seekable");
     }
 
     /**
@@ -125,7 +127,7 @@ class Stream implements StreamInterface
      */
     public function rewind()
     {
-        throw new \RuntimeException("This stream is not seekable");
+        throw new StreamException("This stream is not seekable");
     }
 
     /**
@@ -141,7 +143,7 @@ class Stream implements StreamInterface
      */
     public function write($string)
     {
-        throw new \RuntimeException("This stream is not writable");
+        throw new StreamException("This stream is not writable");
     }
 
     /**
@@ -162,11 +164,20 @@ class Stream implements StreamInterface
         }
 
         if ($this->getSize() < ($this->readed + $length)) {
-            throw new \RuntimeException("Cannot read more than %s", $this->getSize() - $this->readed);
+            throw new StreamException("Cannot read more than %s", $this->getSize() - $this->readed);
+        }
+
+        if ($this->getSize() === $this->readed) {
+            return "";
         }
 
         // Even if we request a length a non blocking stream can return less data than asked
         $read = fread($this->socket, $length);
+
+        if ($this->getMetadata('timed_out')) {
+            throw new TimeoutException("Stream timed out while reading data");
+        }
+
         $this->readed += strlen($read);
 
         return $read;

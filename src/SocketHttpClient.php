@@ -88,12 +88,13 @@ class SocketHttpClient implements HttpClient
     {
         $errNo  = null;
         $errMsg = null;
-
-        $socket = @stream_socket_client($remote, $errNo, $errMsg, $this->config['timeout'], STREAM_CLIENT_CONNECT, $this->config['stream_context']);
+        $socket = @stream_socket_client($remote, $errNo, $errMsg, floor($this->config['timeout'] / 1000), STREAM_CLIENT_CONNECT, $this->config['stream_context']);
 
         if (false === $socket) {
             throw new NetworkException($errMsg, $request);
         }
+
+        stream_set_timeout($socket, floor($this->config['timeout'] / 1000), $this->config['timeout'] % 1000);
 
         if ($useSsl) {
             if (false === @stream_socket_enable_crypto($socket, true, $this->config['ssl_method'])) {
@@ -125,13 +126,11 @@ class SocketHttpClient implements HttpClient
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults($this->config);
-        $resolver->setDefault('stream_context', function (Options $options, $previousValue) {
+        $resolver->setDefault('stream_context', function (Options $options) {
             return stream_context_create($options['stream_context_options'], $options['stream_context_param']);
         });
 
-        $resolver->setDefault('timeout', function (Options $options, $previousValue) {
-            return ini_get('default_socket_timeout');
-        });
+        $resolver->setDefault('timeout', ini_get('default_socket_timeout') * 1000);
 
         $resolver->setAllowedTypes('stream_context_options', 'array');
         $resolver->setAllowedTypes('stream_context_param', 'array');

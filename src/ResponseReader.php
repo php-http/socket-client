@@ -35,14 +35,18 @@ trait ResponseReader
     {
         $headers  = [];
         $reason   = null;
-        $status   = null;
-        $protocol = null;
 
         while (($line = fgets($socket)) !== false) {
             if (rtrim($line) === '') {
                 break;
             }
             $headers[] = trim($line);
+        }
+
+        $metadatas = stream_get_meta_data($socket);
+
+        if (array_key_exists('timed_out', $metadatas) && true === $metadatas['timed_out']) {
+            throw new NetworkException("Error while reading response, stream timed out", $request);
         }
 
         $parts = explode(' ', array_shift($headers), 3);

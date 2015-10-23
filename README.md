@@ -42,12 +42,14 @@ Here is the list of available options:
  * remote_socket: Specify the remote socket where the library should send the request to
  
  Can be a tcp remote : tcp://hostname:port
+ 
  Can be a unix remote : unix://hostname:port
  
  Do not use a tls / ssl scheme, this is handle by the ssl option.
+ 
  If not set, the client will try to determine it from the request uri or host header.
  
- * timeout : Timeout for writing request or reading response on the remote
+ * timeout : Timeout in __milliseconds__ for writing request and reading response on the remote
  * ssl : Activate or deactivate the ssl / tls encryption
  * stream_context_options : Custom options for the context of the stream, same as [PHP stream context options](http://php.net/manual/en/context.php)
  

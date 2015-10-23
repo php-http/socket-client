@@ -182,4 +182,15 @@ class SocketHttpClientTest extends BaseTestCase
         $client   = $this->createClient(['remote_socket' => '127.0.0.1:19999', 'ssl' => true]);
         $client->get('/', []);
     }
+
+    /**
+     * @expectedException \Http\Client\Exception\NetworkException
+     */
+    public function testNetworkExceptionOnTimeout()
+    {
+        $this->startServer('tcp-server');
+
+        $client   = $this->createClient(['timeout' => 10]);
+        $client->get('http://php.net', []);
+    }
 }
