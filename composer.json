@@ -5,14 +5,14 @@
         "php": ">=5.4",
         "symfony/options-resolver": "^2.7",
         "php-http/httplug": "^1.0@dev",
-        "php-http/message-factory": "dev-master as 0.1.1",
+        "php-http/message-factory": "^0.2@dev",
         "php-http/utils": "^0.1@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
         "guzzlehttp/psr7": "^1.2",
-        "php-http/discovery": "dev-master",
-        "php-http/adapter-integration-tests": "dev-feature/httplug"
+        "php-http/discovery": "^0.2@dev",
+        "php-http/adapter-integration-tests": "^0.2@dev"
     },
     "autoload": {
         "psr-4": {
@@ -20,12 +20,6 @@
             "Http\\Socket\\Tests\\": "tests/"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/joelwurtz/adapter-integration-tests"
-        }
-    ],
     "license": "MIT",
     "authors": [
         {
