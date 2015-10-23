@@ -145,4 +145,3 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(is_resource($socket));
     }
 }
- 
