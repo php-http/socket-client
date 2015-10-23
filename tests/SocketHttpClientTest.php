@@ -5,7 +5,6 @@ namespace Http\Socket\Tests;
 use Http\Client\Utils\HttpMethodsClient;
 use Http\Discovery\MessageFactory\GuzzleFactory;
 use Http\Socket\SocketHttpClient;
-use Psr\Http\Message\ResponseInterface;
 
 class SocketHttpClientTest extends BaseTestCase
 {
@@ -22,7 +21,7 @@ class SocketHttpClientTest extends BaseTestCase
         $client   = $this->createClient(['remote_socket' => '127.0.0.1:19999']);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -41,7 +40,7 @@ class SocketHttpClientTest extends BaseTestCase
         $client   = $this->createClient();
         $response = $client->get('http://127.0.0.1:19999/', []);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -51,7 +50,7 @@ class SocketHttpClientTest extends BaseTestCase
         $client   = $this->createClient();
         $response = $client->get('/', ['Host' => '127.0.0.1:19999']);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -78,7 +77,7 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('https://127.0.0.1:19999/', []);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -91,7 +90,7 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -120,7 +119,7 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -145,7 +144,7 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -169,7 +168,7 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(403, $response->getStatusCode());
     }
 

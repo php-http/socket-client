@@ -2,6 +2,7 @@
     "name": "php-http/socket-client",
     "description": "Socket client for PHP-HTTP",
     "require": {
+        "php": ">=5.4",
         "symfony/options-resolver": "^2.7",
         "php-http/httplug": "^1.0@dev",
         "php-http/message-factory": "dev-master as 0.1.1",
