@@ -188,8 +188,6 @@ class SocketHttpClientTest extends BaseTestCase
      */
     public function testNetworkExceptionOnTimeout()
     {
-        $this->startServer('tcp-server');
-
         $client   = $this->createClient(['timeout' => 10]);
         $client->get('http://php.net', []);
     }
