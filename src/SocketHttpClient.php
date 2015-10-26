@@ -21,7 +21,6 @@ class SocketHttpClient implements HttpClient
 {
     use RequestWriter;
     use ResponseReader;
-    use BatchRequest;
 
     private $config = [
         'remote_socket'          => null,
