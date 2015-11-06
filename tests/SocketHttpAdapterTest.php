@@ -2,11 +2,11 @@
 
 namespace Http\Socket\Tests;
 
-use Http\Adapter\Tests\HttpAdapterTest;
+use Http\Client\Tests\HttpClientTest;
 use Http\Discovery\MessageFactory\GuzzleFactory;
 use Http\Socket\SocketHttpClient;
 
-class SocketHttpAdapterTest extends HttpAdapterTest
+class SocketHttpAdapterTest extends HttpClientTest
 {
     /**
      * {@inheritdoc}

@@ -67,12 +67,17 @@ trait ResponseReader
 
         foreach ($headers as $header) {
             $headerParts = explode(':', $header, 2);
-            $responseHeaders[trim($headerParts[0])] = isset($headerParts[1])
+
+            if (!array_key_exists(trim($headerParts[0]), $responseHeaders)) {
+                $responseHeaders[trim($headerParts[0])] = [];
+            }
+
+            $responseHeaders[trim($headerParts[0])][] = isset($headerParts[1])
                 ? trim($headerParts[1])
                 : '';
         }
 
-        $response = $this->messageFactory->createResponse($status, $reason, $protocol, $responseHeaders, null);
+        $response = $this->messageFactory->createResponse($status, $reason, $responseHeaders, null, $protocol);
         $stream   = $this->createStream($socket, $response);
 
         return $response->withBody($stream);
