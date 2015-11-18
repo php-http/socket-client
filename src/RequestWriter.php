@@ -72,7 +72,7 @@ trait RequestWriter
     {
         $message  = vsprintf('%s %s HTTP/%s', [
             strtoupper($request->getMethod()),
-            $request->getUri(),
+            $request->getRequestTarget(),
             $request->getProtocolVersion()
         ])."\r\n";
 
