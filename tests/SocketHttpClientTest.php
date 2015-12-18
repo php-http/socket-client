@@ -3,14 +3,14 @@
 namespace Http\Socket\Tests;
 
 use Http\Client\Utils\HttpMethodsClient;
-use Http\Discovery\MessageFactory\GuzzleFactory;
+use Http\Client\Utils\MessageFactory\GuzzleMessageFactory;
 use Http\Socket\SocketHttpClient;
 
 class SocketHttpClientTest extends BaseTestCase
 {
     public function createClient($options = array())
     {
-        $messageFactory = new GuzzleFactory();
+        $messageFactory = new GuzzleMessageFactory();
 
         return new HttpMethodsClient(new SocketHttpClient($messageFactory, $options), $messageFactory);
     }
