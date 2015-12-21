@@ -47,8 +47,9 @@ class SocketHttpClient implements HttpClient
      */
     public function sendRequest(RequestInterface $request)
     {
-        $remote = $this->config['remote_socket'];
-        $useSsl = $this->config['ssl'];
+        $remote  = $this->config['remote_socket'];
+        $useSsl  = $this->config['ssl'];
+        $request = $request->withHeader('Connection', 'close');
 
         if (null === $remote) {
             $remote = $this->determineRemoteFromRequest($request);
