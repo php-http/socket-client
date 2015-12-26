@@ -2,8 +2,8 @@
 
 namespace Http\Socket\Tests;
 
-use Http\Client\Utils\HttpMethodsClient;
-use Http\Client\Utils\MessageFactory\GuzzleMessageFactory;
+use Http\Client\Common\HttpMethodsClient;
+use Http\Message\MessageFactory\GuzzleMessageFactory;
 use Http\Socket\SocketHttpClient;
 
 class SocketHttpClientTest extends BaseTestCase
