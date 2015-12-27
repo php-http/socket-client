@@ -192,7 +192,13 @@ class Stream implements StreamInterface
             return stream_get_contents($this->socket);
         }
 
-        return $this->read($this->getSize() - $this->readed);
+        $contents = "";
+
+        do {
+            $contents .= $this->read($this->getSize() - $this->readed);
+        } while ($this->readed < $this->getSize());
+
+        return $contents;
     }
 
     /**
