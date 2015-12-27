@@ -36,6 +36,7 @@ before_script: vendor/bin/http_test_server > /dev/null 2>&1 &
 
 script:
   - $TEST_COMMAND
+  - ./vendor/bin/phpunit tests/SocketClientFeatureTest.php --printer \Http\Client\Tests\FeatureTestListener || echo ""
 
 after_success:
   - if [[ "$COVERAGE" = true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
