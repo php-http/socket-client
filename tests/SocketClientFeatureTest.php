@@ -1,10 +1,10 @@
 <?php
 
-namespace Http\Socket\Tests;
+namespace Http\Client\Socket\Tests;
 
 use Http\Client\Tests\HttpFeatureTest;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
-use Http\Socket\SocketHttpClient;
+use Http\Client\Socket\Client as SocketHttpClient;
 
 class SocketClientFeatureTest extends HttpFeatureTest
 {

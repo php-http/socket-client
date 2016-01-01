@@ -5,7 +5,7 @@
         "php": ">=5.4",
         "symfony/options-resolver": "^2.6|^3.0",
         "php-http/httplug": "1.0.0-beta",
-        "php-http/message-factory": "^1.0"
+        "php-http/message-factory": "^1.0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
@@ -17,12 +17,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Http\\Socket\\": "src/"
+            "Http\\Client\\Socket\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Http\\Socket\\Tests\\": "tests/"
+            "Http\\Client\\Socket\\Tests\\": "tests/"
         }
     },
     "license": "MIT",

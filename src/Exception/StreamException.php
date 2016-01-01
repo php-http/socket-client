@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Socket\Exception;
+namespace Http\Client\Socket\Exception;
 
 use Http\Client\Exception;
 

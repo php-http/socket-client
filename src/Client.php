@@ -1,10 +1,9 @@
 <?php
 
-namespace Http\Socket;
+namespace Http\Client\Socket;
 
 use Http\Client\Exception\NetworkException;
 use Http\Client\HttpClient;
-use Http\Client\Utils\BatchRequest;
 use Http\Message\MessageFactory;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -17,7 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Joel Wurtz <joel.wurtz@gmail.com>
  */
-class SocketHttpClient implements HttpClient
+class Client implements HttpClient
 {
     use RequestWriter;
     use ResponseReader;

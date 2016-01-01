@@ -1,9 +1,9 @@
 <?php
 
-namespace Http\Socket;
+namespace Http\Client\Socket;
 
-use Http\Socket\Exception\StreamException;
-use Http\Socket\Exception\TimeoutException;
+use Http\Client\Socket\Exception\StreamException;
+use Http\Client\Socket\Exception\TimeoutException;
 use Psr\Http\Message\StreamInterface;
 
 /**

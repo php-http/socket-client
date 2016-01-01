@@ -1,8 +1,8 @@
 <?php
 
-namespace Http\Socket\Tests;
+namespace Http\Client\Socket\Tests;
 
-use Http\Socket\Stream;
+use Http\Client\Socket\Stream;
 
 class StreamTest extends \PHPUnit_Framework_TestCase
 {
@@ -72,7 +72,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         try {
             $stream->seek(0);
         } catch (\Exception $e) {
-            $this->assertInstanceOf('Http\Socket\Exception\StreamException', $e);
+            $this->assertInstanceOf('Http\Client\Socket\Exception\StreamException', $e);
         }
     }
 
@@ -83,7 +83,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         try {
             $stream->rewind();
         } catch (\Exception $e) {
-            $this->assertInstanceOf('Http\Socket\Exception\StreamException', $e);
+            $this->assertInstanceOf('Http\Client\Socket\Exception\StreamException', $e);
         }
     }
 
@@ -96,7 +96,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         try {
             $stream->write("Test");
         } catch (\Exception $e) {
-            $this->assertInstanceOf('Http\Socket\Exception\StreamException', $e);
+            $this->assertInstanceOf('Http\Client\Socket\Exception\StreamException', $e);
         }
     }
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Http\Socket\Tests;
+namespace Http\Client\Socket\Tests;
 
 use Http\Client\Common\HttpMethodsClient;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
-use Http\Socket\SocketHttpClient;
+use Http\Client\Socket\Client as SocketHttpClient;
 
 class SocketHttpClientTest extends BaseTestCase
 {

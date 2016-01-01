@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Socket\Tests;
+namespace Http\Client\Socket\Tests;
 
 class BaseTestCase extends \PHPUnit_Framework_TestCase
 {

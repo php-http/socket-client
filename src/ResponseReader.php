@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Socket;
+namespace Http\Client\Socket;
 
 use Http\Client\Exception\NetworkException;
 use Http\Message\MessageFactory;
