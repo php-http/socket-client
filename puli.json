@@ -1,0 +1,10 @@
+{
+    "version": "1.0",
+    "bindings": {
+        "549d2931-726b-4f1a-b99c-179959605cfe": {
+            "_class": "Puli\\Discovery\\Binding\\ClassBinding",
+            "class": "Http\\Client\\Socket\\Client",
+            "type": "Http\\Client\\HttpClient"
+        }
+    }
+}
