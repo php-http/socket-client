@@ -48,7 +48,10 @@ class Client implements HttpClient
     {
         $remote  = $this->config['remote_socket'];
         $useSsl  = $this->config['ssl'];
-        $request = $request->withHeader('Connection', 'close');
+
+        if (!$request->hasHeader('Connection')) {
+            $request = $request->withHeader('Connection', 'close');
+        }
 
         if (null === $remote) {
             $remote = $this->determineRemoteFromRequest($request);
