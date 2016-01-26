@@ -7,7 +7,7 @@ use Http\Client\Socket\Exception\TimeoutException;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * Stream implementation for Socket Client
+ * Stream implementation for Socket Client.
  *
  * This implementation is used to have a Stream which react better to the Socket Client behavior.
  *
@@ -43,27 +43,27 @@ class Stream implements StreamInterface
     private $readed = 0;
 
     /**
-     * Create the stream
+     * Create the stream.
      *
      * @param resource $socket
-     * @param integer  $size
+     * @param int      $size
      */
     public function __construct($socket, $size = null)
     {
         $this->socket = $socket;
-        $this->size   = $size;
+        $this->size = $size;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function __toString()
     {
-        return (string)$this->getContents();
+        return (string) $this->getContents();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function close()
     {
@@ -71,7 +71,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function detach()
     {
@@ -83,7 +83,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getSize()
     {
@@ -91,7 +91,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function tell()
     {
@@ -99,7 +99,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function eof()
     {
@@ -107,7 +107,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isSeekable()
     {
@@ -115,23 +115,23 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        throw new StreamException("This stream is not seekable");
+        throw new StreamException('This stream is not seekable');
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function rewind()
     {
-        throw new StreamException("This stream is not seekable");
+        throw new StreamException('This stream is not seekable');
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isWritable()
     {
@@ -139,15 +139,15 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function write($string)
     {
-        throw new StreamException("This stream is not writable");
+        throw new StreamException('This stream is not writable');
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isReadable()
     {
@@ -155,7 +155,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function read($length)
     {
@@ -164,18 +164,18 @@ class Stream implements StreamInterface
         }
 
         if ($this->getSize() < ($this->readed + $length)) {
-            throw new StreamException("Cannot read more than %s", $this->getSize() - $this->readed);
+            throw new StreamException('Cannot read more than %s', $this->getSize() - $this->readed);
         }
 
         if ($this->getSize() === $this->readed) {
-            return "";
+            return '';
         }
 
         // Even if we request a length a non blocking stream can return less data than asked
         $read = fread($this->socket, $length);
 
         if ($this->getMetadata('timed_out')) {
-            throw new TimeoutException("Stream timed out while reading data");
+            throw new TimeoutException('Stream timed out while reading data');
         }
 
         $this->readed += strlen($read);
@@ -184,7 +184,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContents()
     {
@@ -192,7 +192,7 @@ class Stream implements StreamInterface
             return stream_get_contents($this->socket);
         }
 
-        $contents = "";
+        $contents = '';
 
         do {
             $contents .= $this->read($this->getSize() - $this->readed);
@@ -202,7 +202,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getMetadata($key = null)
     {
