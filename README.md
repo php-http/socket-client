@@ -24,6 +24,7 @@ $ composer require php-http/socket-client
  * TLS / SSL Encyrption
  * Client Certificate (only for php > 5.6)
 
+
 ## Usage
 
 The SocketHttpClient class need a [message factory](https://github.com/php-http/message-factory) in order to work:
@@ -35,27 +36,28 @@ $client = new new Http\Socket\SocketHttpClient($messageFactory, $options);
 
 The `$options` array allow to configure the socket client.
 
+
 ## Options
 
 Here is the list of available options:
 
  * remote_socket: Specify the remote socket where the library should send the request to
- 
+
  Can be a tcp remote : tcp://hostname:port
- 
+
  Can be a unix remote : unix://hostname:port
- 
+
  Do not use a tls / ssl scheme, this is handle by the ssl option.
- 
+
  If not set, the client will try to determine it from the request uri or host header.
- 
+
  * timeout : Timeout in __milliseconds__ for writing request and reading response on the remote
  * ssl : Activate or deactivate the ssl / tls encryption
  * stream_context_options : Custom options for the context of the stream, same as [PHP stream context options](http://php.net/manual/en/context.php)
- 
+
  As an example someone may want to pass a client certificate when using the ssl, a valid configuration for this
  use case would be:
- 
+
  ```php
  $options = [
     'stream_context_options' => [
@@ -70,6 +72,7 @@ Here is the list of available options:
  * stream_context_params : Custom parameters for the context of the stream, same as [PHP stream context parameters](http://php.net/manual/en/context.params.php)
  * write_buffer_size : When sending the request we need to bufferize the body, this option specify the size of this buffer, default is 8192,
  if you are sending big file with your client it may be interesting to have a bigger value in order to increase performance.
+
 
 ## Testing
 
@@ -88,7 +91,7 @@ $ composer test
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details.
+Please see our [contributing guide](http://docs.php-http.org/en/latest/development/contributing.html).
 
 
 ## Security
