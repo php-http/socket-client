@@ -8,9 +8,9 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     public function startServer($name)
     {
-        $filename = __DIR__ . '/server/' . $name . '.php';
-        $pipes    = [];
-        $this->servers[$name] = proc_open('php '. $filename, [], $pipes);
+        $filename = __DIR__.'/server/'.$name.'.php';
+        $pipes = [];
+        $this->servers[$name] = proc_open('php '.$filename, [], $pipes);
         usleep(30000);
     }
 

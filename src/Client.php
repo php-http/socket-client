@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Socket Http Client
+ * Socket Http Client.
  *
  * Use stream and socket capabilities of the core of PHP to send HTTP requests
  *
@@ -26,18 +26,19 @@ class Client implements HttpClient
     private $config = [
         'remote_socket'          => null,
         'timeout'                => null,
-        'stream_context_options' => array(),
-        'stream_context_param'   => array(),
+        'stream_context_options' => [],
+        'stream_context_param'   => [],
         'ssl'                    => null,
         'write_buffer_size'      => 8192,
-        'ssl_method'             => STREAM_CRYPTO_METHOD_TLS_CLIENT
+        'ssl_method'             => STREAM_CRYPTO_METHOD_TLS_CLIENT,
     ];
 
     /**
      * Constructor.
      *
      * @param ResponseFactory $responseFactory Response factory for creating response
-     * @param array           $config {
+     * @param array           $config          {
+     *
      *    @var string $remote_socket          Remote entrypoint (can be a tcp or unix domain address)
      *    @var int    $timeout                Timeout before canceling request
      *    @var array  $stream_context_options Context options as defined in the PHP documentation
@@ -68,8 +69,8 @@ class Client implements HttpClient
      */
     public function sendRequest(RequestInterface $request)
     {
-        $remote  = $this->config['remote_socket'];
-        $useSsl  = $this->config['ssl'];
+        $remote = $this->config['remote_socket'];
+        $useSsl = $this->config['ssl'];
 
         if (!$request->hasHeader('Connection')) {
             $request = $request->withHeader('Connection', 'close');
@@ -98,11 +99,11 @@ class Client implements HttpClient
     }
 
     /**
-     * Create the socket to write request and read response on it
+     * Create the socket to write request and read response on it.
      *
      * @param RequestInterface $request Request for
      * @param string           $remote  Entrypoint for the connection
-     * @param boolean          $useSsl  Whether to use ssl or not
+     * @param bool             $useSsl  Whether to use ssl or not
      *
      * @throws NetworkException When the connection fail
      *
@@ -110,7 +111,7 @@ class Client implements HttpClient
      */
     protected function createSocket(RequestInterface $request, $remote, $useSsl)
     {
-        $errNo  = null;
+        $errNo = null;
         $errMsg = null;
         $socket = @stream_socket_client($remote, $errNo, $errMsg, floor($this->config['timeout'] / 1000), STREAM_CLIENT_CONNECT, $this->config['stream_context']);
 
@@ -130,7 +131,7 @@ class Client implements HttpClient
     }
 
     /**
-     * Close the socket, used when having an error
+     * Close the socket, used when having an error.
      *
      * @param resource $socket
      */
@@ -140,7 +141,7 @@ class Client implements HttpClient
     }
 
     /**
-     * Return configuration for the socket client
+     * Return configuration for the socket client.
      *
      * @param array $config Configuration from user
      *
@@ -165,7 +166,7 @@ class Client implements HttpClient
     }
 
     /**
-     * Return remote socket from the request
+     * Return remote socket from the request.
      *
      * @param RequestInterface $request
      *
@@ -175,13 +176,13 @@ class Client implements HttpClient
      */
     private function determineRemoteFromRequest(RequestInterface $request)
     {
-        if ($request->getUri()->getHost() == "" && !$request->hasHeader('Host')) {
-            throw new NetworkException("Cannot find connection endpoint for this request", $request);
+        if ($request->getUri()->getHost() == '' && !$request->hasHeader('Host')) {
+            throw new NetworkException('Cannot find connection endpoint for this request', $request);
         }
 
         $host = $request->getUri()->getHost();
-        $port = $request->getUri()->getPort() ?: ($request->getUri()->getScheme() == "https" ? 443 : 80);
-        $endpoint = sprintf("%s:%s", $host, $port);
+        $port = $request->getUri()->getPort() ?: ($request->getUri()->getScheme() == 'https' ? 443 : 80);
+        $endpoint = sprintf('%s:%s', $host, $port);
 
         // If use the host header if present for the endpoint
         if (empty($host) && $request->hasHeader('Host')) {
