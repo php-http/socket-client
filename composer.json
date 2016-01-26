@@ -1,19 +1,32 @@
 {
     "name": "php-http/socket-client",
     "description": "Socket client for PHP-HTTP",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joel Wurtz",
+            "email": "jwurtz@jolicode.com"
+        }
+    ],
     "require": {
         "php": ">=5.4",
         "symfony/options-resolver": "^2.6|^3.0",
-        "php-http/httplug": "1.0.0-beta",
+        "php-http/httplug": "^1.0",
         "php-http/message-factory": "^1.0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
         "guzzlehttp/psr7": "^1.2",
-        "php-http/discovery": "^0.5@dev",
+        "php-http/discovery": "^0.8@dev",
         "php-http/adapter-integration-tests": "dev-master",
-        "php-http/message": "^0.1@dev",
-        "php-http/client-common": "^0.1@dev"
+        "php-http/message": "^0.2@dev",
+        "php-http/client-common": "0.2.0"
+    },
+    "suggest": {
+        "php-http/discovery": "Used for message factory discovery"
+    },
+    "provide": {
+        "php-http/client-implementation": "1.0"
     },
     "autoload": {
         "psr-4": {
@@ -24,16 +37,6 @@
         "psr-4": {
             "Http\\Client\\Socket\\Tests\\": "tests/"
         }
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Joel Wurtz",
-            "email": "jwurtz@jolicode.com"
-        }
-    ],
-    "provide": {
-        "php-http/client-implementation": "1.0"
     },
     "scripts": {
         "test": "vendor/bin/phpunit",

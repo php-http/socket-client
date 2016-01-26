@@ -4,6 +4,7 @@ namespace Http\Client\Socket;
 
 use Http\Client\Exception\NetworkException;
 use Http\Message\MessageFactory;
+use Http\Message\ResponseFactory;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -17,9 +18,9 @@ use Psr\Http\Message\ResponseInterface;
 trait ResponseReader
 {
     /**
-     * @var MessageFactory
+     * @var ResponseFactory For creating response
      */
-    protected $messageFactory;
+    protected $responseFactory;
 
     /**
      * Read a response from a socket
@@ -77,7 +78,7 @@ trait ResponseReader
                 : '';
         }
 
-        $response = $this->messageFactory->createResponse($status, $reason, $responseHeaders, null, $protocol);
+        $response = $this->responseFactory->createResponse($status, $reason, $responseHeaders, null, $protocol);
         $stream   = $this->createStream($socket, $response);
 
         return $response->withBody($stream);

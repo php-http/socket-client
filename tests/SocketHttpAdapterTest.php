@@ -13,6 +13,6 @@ class SocketHttpAdapterTest extends HttpClientTest
      */
     protected function createHttpAdapter()
     {
-        return new SocketHttpClient(new GuzzleMessageFactory());
+        return new SocketHttpClient();
     }
 }

@@ -4,7 +4,9 @@ namespace Http\Client\Socket;
 
 use Http\Client\Exception\NetworkException;
 use Http\Client\HttpClient;
+use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\MessageFactory;
+use Http\Message\ResponseFactory;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,12 +34,32 @@ class Client implements HttpClient
     ];
 
     /**
-     * @param MessageFactory $messageFactory
-     * @param array          $config
+     * Constructor.
+     *
+     * @param ResponseFactory $responseFactory Response factory for creating response
+     * @param array           $config {
+     *    @var string $remote_socket          Remote entrypoint (can be a tcp or unix domain address)
+     *    @var int    $timeout                Timeout before canceling request
+     *    @var array  $stream_context_options Context options as defined in the PHP documentation
+     *    @var array  $stream_context_param   Context params as defined in the PHP documentation
+     *    @var bool   $ssl                    Use ssl, default to scheme from request, false if not present
+     *    @var int    $write_buffer_size      Buffer when writing the request body, defaults to 8192
+     *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLS_CLIENT
+     * }
+     *
+     * @throws \LogicException When MessageFactory is not provided and cannot be discovered
      */
-    public function __construct(MessageFactory $messageFactory, array $config = [])
+    public function __construct(ResponseFactory $responseFactory = null, array $config = [])
     {
-        $this->messageFactory = $messageFactory;
+        if (null === $responseFactory && !class_exists('\Http\Discovery\MessageFactoryDiscovery')) {
+            throw new \LogicException('No response factory provided and no discovery service is present to guess it, maybe you need to install php-http/discovery package?');
+        }
+
+        if (null === $responseFactory) {
+            $responseFactory = MessageFactoryDiscovery::find();
+        }
+
+        $this->responseFactory = $responseFactory;
         $this->config = $this->configure($config);
     }
 
@@ -58,7 +80,7 @@ class Client implements HttpClient
         }
 
         if (null === $useSsl) {
-            $useSsl = ($request->getUri()->getScheme() == "https");
+            $useSsl = ($request->getUri()->getScheme() === 'https');
         }
 
         $socket = $this->createSocket($request, $remote, $useSsl);
@@ -82,9 +104,9 @@ class Client implements HttpClient
      * @param string           $remote  Entrypoint for the connection
      * @param boolean          $useSsl  Whether to use ssl or not
      *
-     * @throws NetworkException
+     * @throws NetworkException When the connection fail
      *
-     * @return resource
+     * @return resource Socket resource
      */
     protected function createSocket(RequestInterface $request, $remote, $useSsl)
     {

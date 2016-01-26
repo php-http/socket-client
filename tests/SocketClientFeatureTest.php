@@ -10,6 +10,6 @@ class SocketClientFeatureTest extends HttpFeatureTest
 {
     protected function createClient()
     {
-        return new SocketHttpClient(new GuzzleMessageFactory());
+        return new SocketHttpClient();
     }
 }
