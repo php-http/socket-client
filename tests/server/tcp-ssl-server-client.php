@@ -1,17 +1,17 @@
 <?php
 
-$context      = stream_context_create([
+$context = stream_context_create([
     'ssl' => [
-        'local_cert'  => __DIR__ . '/ssl/server-and-key.pem',
-        'cafile'      => __DIR__ . '/ssl/ca.pem',
-        'capture_peer_cert' => true
-    ]
+        'local_cert'        => __DIR__.'/ssl/server-and-key.pem',
+        'cafile'            => __DIR__.'/ssl/ca.pem',
+        'capture_peer_cert' => true,
+    ],
 ]);
 
-$socketServer = stream_socket_server('tcp://127.0.0.1:19999', $errNo, $errStr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+$socketServer = stream_socket_server('tcp://127.0.0.1:19999', $errNo, $errStr, STREAM_SERVER_BIND | STREAM_SERVER_LISTEN, $context);
 stream_socket_enable_crypto($socketServer, false);
 
-$client       = stream_socket_accept($socketServer);
+$client = stream_socket_accept($socketServer);
 stream_set_blocking($client, true);
 stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLS_SERVER);
 
@@ -20,11 +20,11 @@ $name = null;
 
 if (isset(stream_context_get_options($context)['ssl']['peer_certificate'])) {
     $client_cert = stream_context_get_options($context)['ssl']['peer_certificate'];
-    $name = openssl_x509_parse($client_cert)["subject"]["CN"];
+    $name = openssl_x509_parse($client_cert)['subject']['CN'];
 }
 
-if ($name == "socket-adapter-client") {
-    fwrite($client, str_replace("\n", "\r\n", <<<EOR
+if ($name == 'socket-adapter-client') {
+    fwrite($client, str_replace("\n", "\r\n", <<<'EOR'
 HTTP/1.1 200 OK
 Content-Type: text/plain
 
@@ -32,7 +32,7 @@ Test
 EOR
     ));
 } else {
-    fwrite($client, str_replace("\n", "\r\n", <<<EOR
+    fwrite($client, str_replace("\n", "\r\n", <<<'EOR'
 HTTP/1.1 403 Invalid ssl certificate
 Content-Type: text/plain
 

@@ -6,7 +6,7 @@ use Http\Client\Exception\NetworkException;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Method for writing request
+ * Method for writing request.
  *
  * Mainly used by SocketHttpClient
  *
@@ -15,18 +15,18 @@ use Psr\Http\Message\RequestInterface;
 trait RequestWriter
 {
     /**
-     * Write a request to a socket
+     * Write a request to a socket.
      *
      * @param resource         $socket
      * @param RequestInterface $request
-     * @param integer          $bufferSize
+     * @param int              $bufferSize
      *
      * @throws \Http\Client\Exception\NetworkException
      */
     protected function writeRequest($socket, RequestInterface $request, $bufferSize = 8192)
     {
         if (false === $this->fwrite($socket, $this->transformRequestHeadersToString($request))) {
-            throw new NetworkException("Failed to send request, underlying socket not accessible, (BROKEN EPIPE)", $request);
+            throw new NetworkException('Failed to send request, underlying socket not accessible, (BROKEN EPIPE)', $request);
         }
 
         if ($request->getBody()->isReadable()) {
@@ -35,11 +35,11 @@ trait RequestWriter
     }
 
     /**
-     * Write Body of the request
+     * Write Body of the request.
      *
      * @param resource         $socket
      * @param RequestInterface $request
-     * @param integer          $bufferSize
+     * @param int              $bufferSize
      *
      * @throws \Http\Client\Exception\NetworkException
      * @throws \Http\Client\Exception\RequestException
@@ -56,13 +56,13 @@ trait RequestWriter
             $buffer = $body->read($bufferSize);
 
             if (false === $this->fwrite($socket, $buffer)) {
-                throw new NetworkException("An error occur when writing request to client (BROKEN EPIPE)", $request);
+                throw new NetworkException('An error occur when writing request to client (BROKEN EPIPE)', $request);
             }
         }
     }
 
     /**
-     * Produce the header of request as a string based on a PSR Request
+     * Produce the header of request as a string based on a PSR Request.
      *
      * @param RequestInterface $request
      *
@@ -70,10 +70,10 @@ trait RequestWriter
      */
     protected function transformRequestHeadersToString(RequestInterface $request)
     {
-        $message  = vsprintf('%s %s HTTP/%s', [
+        $message = vsprintf('%s %s HTTP/%s', [
             strtoupper($request->getMethod()),
             $request->getRequestTarget(),
-            $request->getProtocolVersion()
+            $request->getProtocolVersion(),
         ])."\r\n";
 
         foreach ($request->getHeaders() as $name => $values) {
@@ -86,7 +86,7 @@ trait RequestWriter
     }
 
     /**
-     * Replace fwrite behavior as api is broken in PHP
+     * Replace fwrite behavior as api is broken in PHP.
      *
      * @see https://secure.phabricator.com/rPHU69490c53c9c2ef2002bc2dd4cecfe9a4b080b497
      *
