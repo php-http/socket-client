@@ -47,15 +47,9 @@ class Client implements HttpClient
      *    @var int    $write_buffer_size      Buffer when writing the request body, defaults to 8192
      *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLS_CLIENT
      * }
-     *
-     * @throws \LogicException When MessageFactory is not provided and cannot be discovered
      */
     public function __construct(ResponseFactory $responseFactory = null, array $config = [])
     {
-        if (null === $responseFactory && !class_exists('\Http\Discovery\MessageFactoryDiscovery')) {
-            throw new \LogicException('No response factory provided and no discovery service is present to guess it, maybe you need to install php-http/discovery package?');
-        }
-
         if (null === $responseFactory) {
             $responseFactory = MessageFactoryDiscovery::find();
         }
