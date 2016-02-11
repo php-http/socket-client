@@ -5,7 +5,6 @@ namespace Http\Client\Socket;
 use Http\Client\Exception\NetworkException;
 use Http\Client\HttpClient;
 use Http\Discovery\MessageFactoryDiscovery;
-use Http\Message\MessageFactory;
 use Http\Message\ResponseFactory;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\OptionsResolver\Options;
