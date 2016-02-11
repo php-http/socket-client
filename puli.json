@@ -44,8 +44,7 @@
         },
         "php-http/discovery": {
             "install-path": "vendor/php-http/discovery",
-            "installer": "composer",
-            "env": "dev"
+            "installer": "composer"
         },
         "php-http/httplug": {
             "install-path": "vendor/php-http/httplug",
