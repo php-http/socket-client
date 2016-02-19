@@ -144,4 +144,14 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse(is_resource($socket));
     }
+
+    public function testRead()
+    {
+        $stream = $this->createSocket("Body");
+
+        $this->assertEquals("Bod", $stream->read(3));
+        $this->assertEquals("y", $stream->read(3));
+
+        $stream->close();
+    }
 }

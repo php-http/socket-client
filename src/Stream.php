@@ -163,10 +163,6 @@ class Stream implements StreamInterface
             return fread($this->socket, $length);
         }
 
-        if ($this->getSize() < ($this->readed + $length)) {
-            throw new StreamException('Cannot read more than %s', $this->getSize() - $this->readed);
-        }
-
         if ($this->getSize() === $this->readed) {
             return '';
         }
