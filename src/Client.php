@@ -69,6 +69,10 @@ class Client implements HttpClient
             $request = $request->withHeader('Connection', 'close');
         }
 
+        if (!$request->hasHeader('Content-Length') && false != ($bodySize = $request->getBody()->getSize())) {
+            $request = $request->withHeader('Content-Length', $bodySize);
+        }
+
         if (null === $remote) {
             $remote = $this->determineRemoteFromRequest($request);
         }
