@@ -2,7 +2,6 @@
 
 namespace Http\Client\Socket;
 
-use Http\Client\Exception\NetworkException;
 use Http\Client\HttpClient;
 use Http\Client\Socket\Exception\ConnectionException;
 use Http\Client\Socket\Exception\InvalidRequestException;

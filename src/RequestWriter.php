@@ -2,7 +2,6 @@
 
 namespace Http\Client\Socket;
 
-use Http\Client\Exception\NetworkException;
 use Http\Client\Socket\Exception\BrokenPipeException;
 use Psr\Http\Message\RequestInterface;
 
