@@ -22,7 +22,7 @@ class Client implements HttpClient
     use ResponseReader;
 
     /**
-     * Config of this client
+     * Config of this client.
      *
      * @var array
      */
@@ -39,7 +39,7 @@ class Client implements HttpClient
     /**
      * Constructor.
      *
-     * @param array           $config          {
+     * @param array $config {
      *
      *    @var string $remote_socket          Remote entrypoint (can be a tcp or unix domain address)
      *    @var int    $timeout                Timeout before canceling request
@@ -49,7 +49,8 @@ class Client implements HttpClient
      *    @var int    $write_buffer_size      Buffer when writing the request body, defaults to 8192
      *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLS_CLIENT
      * }
-     * @param array            $deprecatedConfig Use for BC with old versions
+     *
+     * @param array $deprecatedConfig Use for BC with old versions
      */
     public function __construct($config = [], array $deprecatedConfig = [])
     {
