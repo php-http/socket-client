@@ -2,8 +2,8 @@
 
 namespace Http\Client\Socket;
 
+use GuzzleHttp\Psr7\Response;
 use Http\Client\Exception\NetworkException;
-use Http\Message\ResponseFactory;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -16,11 +16,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 trait ResponseReader
 {
-    /**
-     * @var ResponseFactory For creating response
-     */
-    protected $responseFactory;
-
     /**
      * Read a response from a socket.
      *
@@ -77,7 +72,7 @@ trait ResponseReader
                 : '';
         }
 
-        $response = $this->responseFactory->createResponse($status, $reason, $responseHeaders, null, $protocol);
+        $response = new Response($status, $responseHeaders, null, $protocol, $reason);
         $stream = $this->createStream($socket, $response);
 
         return $response->withBody($stream);

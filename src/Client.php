@@ -4,7 +4,6 @@ namespace Http\Client\Socket;
 
 use Http\Client\Exception\NetworkException;
 use Http\Client\HttpClient;
-use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\ResponseFactory;
 use Psr\Http\Message\RequestInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -22,6 +21,11 @@ class Client implements HttpClient
     use RequestWriter;
     use ResponseReader;
 
+    /**
+     * Config of this client
+     *
+     * @var array
+     */
     private $config = [
         'remote_socket' => null,
         'timeout' => null,
@@ -35,7 +39,6 @@ class Client implements HttpClient
     /**
      * Constructor.
      *
-     * @param ResponseFactory $responseFactory Response factory for creating response
      * @param array           $config          {
      *
      *    @var string $remote_socket          Remote entrypoint (can be a tcp or unix domain address)
@@ -46,15 +49,20 @@ class Client implements HttpClient
      *    @var int    $write_buffer_size      Buffer when writing the request body, defaults to 8192
      *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLS_CLIENT
      * }
+     * @param array            $deprecatedConfig Use for BC with old versions
      */
-    public function __construct(ResponseFactory $responseFactory = null, array $config = [])
+    public function __construct($config = [], array $deprecatedConfig = [])
     {
-        if (null === $responseFactory) {
-            $responseFactory = MessageFactoryDiscovery::find();
+        if ($config instanceof ResponseFactory || $config === null) {
+            // To remove in 2.0
+            trigger_error(
+                'Injecting a request factory is no longer required, as this lib directly use guzzlehttp/psr7 implementation',
+                E_USER_DEPRECATED
+            );
+            $this->config = $this->configure($deprecatedConfig);
+        } else {
+            $this->config = $this->configure($config);
         }
-
-        $this->responseFactory = $responseFactory;
-        $this->config = $this->configure($config);
     }
 
     /**
