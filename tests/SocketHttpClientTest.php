@@ -12,7 +12,7 @@ class SocketHttpClientTest extends BaseTestCase
     {
         $messageFactory = new GuzzleMessageFactory();
 
-        return new HttpMethodsClient(new SocketHttpClient($messageFactory, $options), $messageFactory);
+        return new HttpMethodsClient(new SocketHttpClient($options), $messageFactory);
     }
 
     public function testTcpSocketDomain()
