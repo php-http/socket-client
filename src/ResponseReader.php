@@ -3,6 +3,8 @@
 namespace Http\Client\Socket;
 
 use Http\Client\Exception\NetworkException;
+use Http\Client\Socket\Exception\BrokenPipeException;
+use Http\Client\Socket\Exception\TimeoutException;
 use Http\Message\ResponseFactory;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -27,7 +29,8 @@ trait ResponseReader
      * @param RequestInterface $request
      * @param resource         $socket
      *
-     * @throws NetworkException When the response cannot be read
+     * @throws TimeoutException    When the socket timed out
+     * @throws BrokenPipeException When the response cannot be read
      *
      * @return ResponseInterface
      */
@@ -46,13 +49,13 @@ trait ResponseReader
         $metadatas = stream_get_meta_data($socket);
 
         if (array_key_exists('timed_out', $metadatas) && true === $metadatas['timed_out']) {
-            throw new NetworkException('Error while reading response, stream timed out', $request);
+            throw new TimeoutException('Error while reading response, stream timed out', $request);
         }
 
         $parts = explode(' ', array_shift($headers), 3);
 
         if (count($parts) <= 1) {
-            throw new NetworkException('Cannot read the response', $request);
+            throw new BrokenPipeException('Cannot read the response', $request);
         }
 
         $protocol = substr($parts[0], -3);

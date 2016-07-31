@@ -3,6 +3,7 @@
 namespace Http\Client\Socket;
 
 use Http\Client\Exception\NetworkException;
+use Http\Client\Socket\Exception\BrokenPipeException;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -21,12 +22,12 @@ trait RequestWriter
      * @param RequestInterface $request
      * @param int              $bufferSize
      *
-     * @throws \Http\Client\Exception\NetworkException
+     * @throws BrokenPipeException
      */
     protected function writeRequest($socket, RequestInterface $request, $bufferSize = 8192)
     {
         if (false === $this->fwrite($socket, $this->transformRequestHeadersToString($request))) {
-            throw new NetworkException('Failed to send request, underlying socket not accessible, (BROKEN EPIPE)', $request);
+            throw new BrokenPipeException('Failed to send request, underlying socket not accessible, (BROKEN EPIPE)', $request);
         }
 
         if ($request->getBody()->isReadable()) {
@@ -41,8 +42,7 @@ trait RequestWriter
      * @param RequestInterface $request
      * @param int              $bufferSize
      *
-     * @throws \Http\Client\Exception\NetworkException
-     * @throws \Http\Client\Exception\RequestException
+     * @throws BrokenPipeException
      */
     protected function writeBody($socket, RequestInterface $request, $bufferSize = 8192)
     {
@@ -56,7 +56,7 @@ trait RequestWriter
             $buffer = $body->read($bufferSize);
 
             if (false === $this->fwrite($socket, $buffer)) {
-                throw new NetworkException('An error occur when writing request to client (BROKEN EPIPE)', $request);
+                throw new BrokenPipeException('An error occur when writing request to client (BROKEN EPIPE)', $request);
             }
         }
     }
