@@ -2,8 +2,10 @@
 
 namespace Http\Client\Socket;
 
-use Http\Client\Exception\NetworkException;
 use Http\Client\HttpClient;
+use Http\Client\Socket\Exception\ConnectionException;
+use Http\Client\Socket\Exception\InvalidRequestException;
+use Http\Client\Socket\Exception\SSLConnectionException;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\ResponseFactory;
 use Psr\Http\Message\RequestInterface;
@@ -98,7 +100,7 @@ class Client implements HttpClient
      * @param string           $remote  Entrypoint for the connection
      * @param bool             $useSsl  Whether to use ssl or not
      *
-     * @throws NetworkException When the connection fail
+     * @throws ConnectionException|SSLConnectionException When the connection fail
      *
      * @return resource Socket resource
      */
@@ -109,15 +111,13 @@ class Client implements HttpClient
         $socket = @stream_socket_client($remote, $errNo, $errMsg, floor($this->config['timeout'] / 1000), STREAM_CLIENT_CONNECT, $this->config['stream_context']);
 
         if (false === $socket) {
-            throw new NetworkException($errMsg, $request);
+            throw new ConnectionException($errMsg, $request);
         }
 
         stream_set_timeout($socket, floor($this->config['timeout'] / 1000), $this->config['timeout'] % 1000);
 
-        if ($useSsl) {
-            if (false === @stream_socket_enable_crypto($socket, true, $this->config['ssl_method'])) {
-                throw new NetworkException(sprintf('Cannot enable tls: %s', error_get_last()['message']), $request);
-            }
+        if ($useSsl && false === @stream_socket_enable_crypto($socket, true, $this->config['ssl_method'])) {
+            throw new SSLConnectionException(sprintf('Cannot enable tls: %s', error_get_last()['message']), $request);
         }
 
         return $socket;
@@ -163,18 +163,18 @@ class Client implements HttpClient
      *
      * @param RequestInterface $request
      *
-     * @throws NetworkException When no remote can be determined from the request
+     * @throws InvalidRequestException When no remote can be determined from the request
      *
      * @return string
      */
     private function determineRemoteFromRequest(RequestInterface $request)
     {
-        if ($request->getUri()->getHost() == '' && !$request->hasHeader('Host')) {
-            throw new NetworkException('Cannot find connection endpoint for this request', $request);
+        if (!$request->hasHeader('Host') && $request->getUri()->getHost() === '') {
+            throw new InvalidRequestException('Remote is not defined and we cannot determine a connection endpoint for this request (no Host header)', $request);
         }
 
         $host = $request->getUri()->getHost();
-        $port = $request->getUri()->getPort() ?: ($request->getUri()->getScheme() == 'https' ? 443 : 80);
+        $port = $request->getUri()->getPort() ?: ($request->getUri()->getScheme() === 'https' ? 443 : 80);
         $endpoint = sprintf('%s:%s', $host, $port);
 
         // If use the host header if present for the endpoint
