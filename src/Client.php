@@ -84,10 +84,8 @@ class Client implements HttpClient
         try {
             $this->writeRequest($socket, $request, $this->config['write_buffer_size']);
             $response = $this->readResponse($request, $socket);
-        } catch (\Exception $e) {
+        } finally {
             $this->closeSocket($socket);
-
-            throw $e;
         }
 
         return $response;
