@@ -1,6 +1,18 @@
 # Change Log
 
-## Unreleased
+## 1.3.0
+
+ * Make sure `Stream::__toString` never throws exception
+ * Added more exception
+   * `BrokenPipeException`
+   * `ConnectionException`
+   * `InvalidRequestException`
+   * `SSLConnectionException`
+ 
+## 1.2.0
+
+ * Dropped PHP 5.4 support
+ * Using stable version of `php-http/discovery`
 
 ## 1.1.0
 

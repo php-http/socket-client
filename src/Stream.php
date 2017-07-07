@@ -59,7 +59,11 @@ class Stream implements StreamInterface
      */
     public function __toString()
     {
-        return (string) $this->getContents();
+        try {
+            return $this->getContents();
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     /**
