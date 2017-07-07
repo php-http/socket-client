@@ -59,7 +59,15 @@ class Stream implements StreamInterface
      */
     public function __toString()
     {
-        return (string) $this->getContents();
+        try {
+            if ($this->isSeekable()) {
+                $this->seek(0);
+            }
+
+            return $this->getContents();
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     /**
