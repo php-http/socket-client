@@ -3,8 +3,9 @@
 namespace Http\Client\Socket\Tests;
 
 use Http\Client\Socket\Stream;
+use PHPUnit\Framework\TestCase;
 
-class StreamTest extends \PHPUnit_Framework_TestCase
+class StreamTest extends TestCase
 {
     public function createSocket($body, $useSize = true)
     {
