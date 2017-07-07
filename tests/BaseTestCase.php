@@ -13,7 +13,7 @@ class BaseTestCase extends TestCase
         $filename = __DIR__ . '/server/' . $name . '.php';
         $pipes    = [];
         $this->servers[$name] = proc_open('php '. $filename, [], $pipes);
-        usleep(300000);
+        sleep(1);
     }
 
     public function stopServer($name)
