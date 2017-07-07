@@ -28,7 +28,15 @@ First launch the http server:
 $ ./vendor/bin/http_test_server > /dev/null 2>&1 &
 ```
 
-Then the test suite:
+Then generate ssh certificates:
+
+```bash
+$ cd ./tests/server/ssl 
+$ ./generate.sh
+$ cd ../../../ 
+```
+
+Now run the test suite:
 
 ``` bash
 $ composer test

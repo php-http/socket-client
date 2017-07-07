@@ -2,7 +2,9 @@
 
 namespace Http\Client\Socket\Tests;
 
-class BaseTestCase extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BaseTestCase extends TestCase
 {
     private $servers = [];
 
@@ -11,7 +13,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $filename = __DIR__ . '/server/' . $name . '.php';
         $pipes    = [];
         $this->servers[$name] = proc_open('php '. $filename, [], $pipes);
-        usleep(30000);
+        usleep(300000);
     }
 
     public function stopServer($name)
