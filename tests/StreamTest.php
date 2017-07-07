@@ -2,6 +2,7 @@
 
 namespace Http\Client\Socket\Tests;
 
+use Http\Client\Socket\Exception\TimeoutException;
 use Http\Client\Socket\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -108,18 +109,16 @@ class StreamTest extends TestCase
         $this->assertTrue($stream->isReadable());
     }
 
+    /**
+     * @expectedException \Http\Client\Socket\Exception\TimeoutException
+     */
     public function testTimeout()
     {
         $socket = fsockopen("php.net", 80);
         socket_set_timeout($socket, 0, 100);
 
-        $stream = new Stream($socket);
-
-        try {
-            $stream->getContents();
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Http\Socket\Exception\TimeoutException', $e);
-        }
+        $stream = new Stream($socket, 50);
+        $stream->getContents();
     }
 
     public function testMetadatas()

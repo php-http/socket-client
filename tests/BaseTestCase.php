@@ -12,6 +12,11 @@ class BaseTestCase extends TestCase
     {
         $filename = __DIR__ . '/server/' . $name . '.php';
         $pipes    = [];
+
+        if (!Semaphore::acquire()) {
+            $this->fail('Could not connect to server');
+        }
+
         $this->servers[$name] = proc_open('php '. $filename, [], $pipes);
         sleep(1);
     }
@@ -28,5 +33,7 @@ class BaseTestCase extends TestCase
         foreach (array_keys($this->servers) as $name) {
             $this->stopServer($name);
         }
+
+        Semaphore::release();
     }
 }
