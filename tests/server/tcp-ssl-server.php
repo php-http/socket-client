@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__."/../Semaphore.php";
+
 $context      = stream_context_create([
     'ssl' => [
         'local_cert'  => __DIR__ . '/ssl/server-and-key.pem'
@@ -30,8 +32,8 @@ EOR
 }
 
 
-
-
 while (!@feof($client)) {
     @fread($client, 1000);
 }
+
+\Http\Client\Socket\Tests\Semaphore::release();

@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__."/../Semaphore.php";
+
 if (file_exists(__DIR__.'/server.sock')) {
     unlink(__DIR__.'/server.sock');
 }
@@ -20,3 +22,4 @@ while (!@feof($client)) {
 }
 
 unlink(__DIR__.'/server.sock');
+\Http\Client\Socket\Tests\Semaphore::release();
