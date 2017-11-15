@@ -14,16 +14,16 @@ class StreamException extends \RuntimeException implements Exception
     private $request;
 
     /**
-     * Accepts an optional request object as second param
+     * Accepts an optional request object as 4th param
      *
-     * @param string $message
-     * @param RequestInterface $request
-     * @param long $code
-     * @param Exception $previous
+     * @param string            $message
+     * @param int               $code
+     * @param Exception         $previous
+     * @param RequestInterface  $request
      */
-    public function __construct($message = null, RequestInterface $request = null, $code = null, $previous = null)
+    public function __construct($message = null, $code = null, $previous = null, RequestInterface $request = null)
     {
-        $this->request=$request;
+        $this->request = $request;
         parent::__construct($message, $code, $previous);
     }
 
