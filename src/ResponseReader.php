@@ -38,8 +38,8 @@ trait ResponseReader
         $headers = [];
         $reason = null;
 
-        while (($line = fgets($socket)) !== false) {
-            if (rtrim($line) === '') {
+        while (false !== ($line = fgets($socket))) {
+            if ('' === rtrim($line)) {
                 break;
             }
             $headers[] = trim($line);

@@ -100,7 +100,7 @@ trait RequestWriter
             return 0;
         }
         $result = @fwrite($stream, $bytes);
-        if ($result !== 0) {
+        if (0 !== $result) {
             // In cases where some bytes are witten (`$result > 0`) or
             // an error occurs (`$result === false`), the behavior of fwrite() is
             // correct. We can return the value as-is.
@@ -124,7 +124,7 @@ trait RequestWriter
         // perform a write. If the write also fails, conclude that these failures are
         // EPIPE or some other permanent failure.
         $result = @fwrite($stream, $bytes);
-        if ($result !== 0) {
+        if (0 !== $result) {
             // The write worked or failed explicitly. This value is fine to return.
             return $result;
         }
