@@ -76,7 +76,7 @@ class Client implements HttpClient
         }
 
         if (null === $useSsl) {
-            $useSsl = ($request->getUri()->getScheme() === 'https');
+            $useSsl = ('https' === $request->getUri()->getScheme());
         }
 
         $socket = $this->createSocket($request, $remote, $useSsl);
@@ -169,12 +169,12 @@ class Client implements HttpClient
      */
     private function determineRemoteFromRequest(RequestInterface $request)
     {
-        if (!$request->hasHeader('Host') && $request->getUri()->getHost() === '') {
+        if (!$request->hasHeader('Host') && '' === $request->getUri()->getHost()) {
             throw new InvalidRequestException('Remote is not defined and we cannot determine a connection endpoint for this request (no Host header)', $request);
         }
 
         $host = $request->getUri()->getHost();
-        $port = $request->getUri()->getPort() ?: ($request->getUri()->getScheme() === 'https' ? 443 : 80);
+        $port = $request->getUri()->getPort() ?: ('https' === $request->getUri()->getScheme() ? 443 : 80);
         $endpoint = sprintf('%s:%s', $host, $port);
 
         // If use the host header if present for the endpoint
