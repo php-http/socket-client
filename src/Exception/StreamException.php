@@ -8,18 +8,19 @@ use Psr\Http\Message\RequestInterface;
 class StreamException extends \RuntimeException implements Exception
 {
     /**
-     * The request object
+     * The request object.
+     *
      * @var RequestInterface
      */
     private $request;
 
     /**
-     * Accepts an optional request object as 4th param
+     * Accepts an optional request object as 4th param.
      *
-     * @param string            $message
-     * @param int               $code
-     * @param Exception         $previous
-     * @param RequestInterface  $request
+     * @param string           $message
+     * @param int              $code
+     * @param Exception        $previous
+     * @param RequestInterface $request
      */
     public function __construct($message = null, $code = null, $previous = null, RequestInterface $request = null)
     {
@@ -28,7 +29,7 @@ class StreamException extends \RuntimeException implements Exception
     }
 
     /**
-     * @return \Psr\Http\Message\RequestInterface|NULL
+     * @return \Psr\Http\Message\RequestInterface|null
      */
     final public function getRequest()
     {
