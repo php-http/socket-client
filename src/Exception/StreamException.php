@@ -36,4 +36,3 @@ class StreamException extends \RuntimeException implements Exception
         return $this->request;
     }
 }
-
