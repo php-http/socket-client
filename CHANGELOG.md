@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.4.0
+
+ * Support for Symfony 4
+
 ## 1.3.0
 
  * Make sure `Stream::__toString` never throws exception
