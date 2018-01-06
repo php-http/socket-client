@@ -67,6 +67,16 @@ class Stream implements StreamInterface
     }
 
     /**
+     * Close the socket when the object is destructed.
+     */
+    public function __destruct()
+    {
+        if (is_resource($this->socket)) {
+            $this->close();
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function close()
