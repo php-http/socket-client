@@ -71,7 +71,9 @@ class Stream implements StreamInterface
      */
     public function __destruct()
     {
-        $this->close();
+        if (is_resource($this->socket)) {
+            $this->close();
+        }
     }
 
     /**
