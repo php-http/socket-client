@@ -15,7 +15,7 @@ stream_socket_enable_crypto($socketServer, false);
 
 $client       = stream_socket_accept($socketServer);
 stream_set_blocking($client, true);
-stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLS_SERVER);
+stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLSv1_2_SERVER);
 
 // Verify client certificate
 $name = null;

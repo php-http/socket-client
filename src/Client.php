@@ -31,7 +31,7 @@ class Client implements HttpClient
         'stream_context_param' => [],
         'ssl' => null,
         'write_buffer_size' => 8192,
-        'ssl_method' => STREAM_CRYPTO_METHOD_TLS_CLIENT,
+        'ssl_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
     ];
 
     /**
@@ -46,7 +46,7 @@ class Client implements HttpClient
      *    @var array  $stream_context_param   Context params as defined in the PHP documentation
      *    @var bool   $ssl                    Use ssl, default to scheme from request, false if not present
      *    @var int    $write_buffer_size      Buffer when writing the request body, defaults to 8192
-     *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLS_CLIENT
+     *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
      * }
      */
     public function __construct(ResponseFactory $responseFactory = null, array $config = [])
