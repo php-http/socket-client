@@ -17,9 +17,8 @@ trait RequestWriter
     /**
      * Write a request to a socket.
      *
-     * @param resource         $socket
-     * @param RequestInterface $request
-     * @param int              $bufferSize
+     * @param resource $socket
+     * @param int      $bufferSize
      *
      * @throws BrokenPipeException
      */
@@ -37,9 +36,8 @@ trait RequestWriter
     /**
      * Write Body of the request.
      *
-     * @param resource         $socket
-     * @param RequestInterface $request
-     * @param int              $bufferSize
+     * @param resource $socket
+     * @param int      $bufferSize
      *
      * @throws BrokenPipeException
      */
@@ -63,7 +61,6 @@ trait RequestWriter
     /**
      * Produce the header of request as a string based on a PSR Request.
      *
-     * @param RequestInterface $request
      *
      * @return string
      */

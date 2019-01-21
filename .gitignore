@@ -4,3 +4,7 @@ vendor/
 composer.lock
 phpspec.yml
 phpunit.xml
+/.php_cs.cache
+/tests/server/ssl/*.pem
+/tests/server/ssl/*.key
+/tests/server/ssl/*.req

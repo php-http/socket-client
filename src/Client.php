@@ -161,7 +161,6 @@ class Client implements HttpClient
     /**
      * Return remote socket from the request.
      *
-     * @param RequestInterface $request
      *
      * @throws InvalidRequestException When no remote can be determined from the request
      *

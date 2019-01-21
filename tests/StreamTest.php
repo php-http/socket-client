@@ -2,7 +2,6 @@
 
 namespace Http\Client\Socket\Tests;
 
-use Http\Client\Socket\Exception\TimeoutException;
 use Http\Client\Socket\Stream;
 use PHPUnit\Framework\TestCase;
 
@@ -19,24 +18,24 @@ class StreamTest extends TestCase
 
     public function testToString()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
 
-        $this->assertEquals("Body", $stream->__toString());
+        $this->assertEquals('Body', $stream->__toString());
         $stream->close();
     }
 
     public function testSubsequentCallIsEmpty()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
 
-        $this->assertEquals("Body", $stream->getContents());
+        $this->assertEquals('Body', $stream->getContents());
         $this->assertEmpty($stream->getContents());
         $stream->close();
     }
 
     public function testDetach()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
         $socket = $stream->detach();
 
         $this->assertTrue(is_resource($socket));
@@ -45,21 +44,21 @@ class StreamTest extends TestCase
 
     public function testTell()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
 
         $this->assertEquals(0, $stream->tell());
-        $this->assertEquals("Body", $stream->getContents());
+        $this->assertEquals('Body', $stream->getContents());
         $this->assertEquals(4, $stream->tell());
     }
 
     public function testEof()
     {
         $socket = fopen('php://memory', 'rw+');
-        fwrite($socket, "Body");
+        fwrite($socket, 'Body');
         fseek($socket, 0);
         $stream = new Stream($socket);
 
-        $this->assertEquals("Body", $stream->getContents());
+        $this->assertEquals('Body', $stream->getContents());
         fwrite($socket, "\0");
         $this->assertTrue($stream->eof());
         $stream->close();
@@ -67,7 +66,7 @@ class StreamTest extends TestCase
 
     public function testNotSeekable()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
 
         $this->assertFalse($stream->isSeekable());
 
@@ -80,7 +79,7 @@ class StreamTest extends TestCase
 
     public function testNoRewing()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
 
         try {
             $stream->rewind();
@@ -91,12 +90,12 @@ class StreamTest extends TestCase
 
     public function testNotWritable()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
 
         $this->assertFalse($stream->isWritable());
 
         try {
-            $stream->write("Test");
+            $stream->write('Test');
         } catch (\Exception $e) {
             $this->assertInstanceOf('Http\Client\Socket\Exception\StreamException', $e);
         }
@@ -104,7 +103,7 @@ class StreamTest extends TestCase
 
     public function testIsReadable()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
 
         $this->assertTrue($stream->isReadable());
     }
@@ -114,7 +113,7 @@ class StreamTest extends TestCase
      */
     public function testTimeout()
     {
-        $socket = fsockopen("php.net", 80);
+        $socket = fsockopen('php.net', 80);
         socket_set_timeout($socket, 0, 100);
 
         $stream = new Stream($socket, 50);
@@ -123,20 +122,20 @@ class StreamTest extends TestCase
 
     public function testMetadatas()
     {
-        $stream = $this->createSocket("Body", false);
+        $stream = $this->createSocket('Body', false);
 
-        $this->assertEquals("PHP", $stream->getMetadata("wrapper_type"));
-        $this->assertEquals("MEMORY", $stream->getMetadata("stream_type"));
-        $this->assertEquals("php://memory", $stream->getMetadata("uri"));
-        $this->assertFalse($stream->getMetadata("timed_out"));
-        $this->assertFalse($stream->getMetadata("eof"));
-        $this->assertTrue($stream->getMetadata("blocked"));
+        $this->assertEquals('PHP', $stream->getMetadata('wrapper_type'));
+        $this->assertEquals('MEMORY', $stream->getMetadata('stream_type'));
+        $this->assertEquals('php://memory', $stream->getMetadata('uri'));
+        $this->assertFalse($stream->getMetadata('timed_out'));
+        $this->assertFalse($stream->getMetadata('eof'));
+        $this->assertTrue($stream->getMetadata('blocked'));
     }
 
     public function testClose()
     {
         $socket = fopen('php://memory', 'rw+');
-        fwrite($socket, "Body");
+        fwrite($socket, 'Body');
         fseek($socket, 0);
 
         $stream = new Stream($socket);
@@ -147,10 +146,10 @@ class StreamTest extends TestCase
 
     public function testRead()
     {
-        $stream = $this->createSocket("Body");
+        $stream = $this->createSocket('Body');
 
-        $this->assertEquals("Bod", $stream->read(3));
-        $this->assertEquals("y", $stream->read(3));
+        $this->assertEquals('Bod', $stream->read(3));
+        $this->assertEquals('y', $stream->read(3));
 
         $stream->close();
     }

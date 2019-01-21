@@ -16,6 +16,7 @@
         "php-http/discovery": "^1.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.2",
         "guzzlehttp/psr7": "^1.2",
         "php-http/client-integration-tests": "^0.6",
         "php-http/message": "^1.0",
@@ -35,6 +36,8 @@
         }
     },
     "scripts": {
+        "cs-check": "vendor/bin/php-cs-fixer fix --dry-run",
+        "cs-fix": "vendor/bin/php-cs-fixer fix",
         "test": "vendor/bin/phpunit",
         "test-ci": "vendor/bin/phpunit --coverage-clover build/coverage.xml"
     },

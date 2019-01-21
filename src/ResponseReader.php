@@ -25,8 +25,7 @@ trait ResponseReader
     /**
      * Read a response from a socket.
      *
-     * @param RequestInterface $request
-     * @param resource         $socket
+     * @param resource $socket
      *
      * @throws TimeoutException    When the socket timed out
      * @throws BrokenPipeException When the response cannot be read
@@ -89,7 +88,6 @@ trait ResponseReader
      * Create the stream.
      *
      * @param $socket
-     * @param ResponseInterface $response
      *
      * @return Stream
      */

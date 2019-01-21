@@ -1,17 +1,17 @@
 <?php
 
-require_once __DIR__."/../Semaphore.php";
+require_once __DIR__.'/../Semaphore.php';
 
-$context      = stream_context_create([
+$context = stream_context_create([
     'ssl' => [
-        'local_cert'  => __DIR__ . '/ssl/server-and-key.pem'
-    ]
+        'local_cert' => __DIR__.'/ssl/server-and-key.pem',
+    ],
 ]);
 
-$socketServer = stream_socket_server('tcp://127.0.0.1:19999', $errNo, $errStr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+$socketServer = stream_socket_server('tcp://127.0.0.1:19999', $errNo, $errStr, STREAM_SERVER_BIND | STREAM_SERVER_LISTEN, $context);
 stream_socket_enable_crypto($socketServer, false);
 
-$client       = stream_socket_accept($socketServer);
+$client = stream_socket_accept($socketServer);
 stream_set_blocking($client, true);
 if (@stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLS_SERVER)) {
     fwrite($client, str_replace("\n", "\r\n", <<<EOR
@@ -30,7 +30,6 @@ Test
 EOR
     ));
 }
-
 
 while (!@feof($client)) {
     @fread($client, 1000);
