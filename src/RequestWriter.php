@@ -18,11 +18,10 @@ trait RequestWriter
      * Write a request to a socket.
      *
      * @param resource $socket
-     * @param int      $bufferSize
      *
      * @throws BrokenPipeException
      */
-    protected function writeRequest($socket, RequestInterface $request, $bufferSize = 8192)
+    protected function writeRequest($socket, RequestInterface $request, int $bufferSize = 8192)
     {
         if (false === $this->fwrite($socket, $this->transformRequestHeadersToString($request))) {
             throw new BrokenPipeException('Failed to send request, underlying socket not accessible, (BROKEN EPIPE)', $request);
@@ -37,11 +36,10 @@ trait RequestWriter
      * Write Body of the request.
      *
      * @param resource $socket
-     * @param int      $bufferSize
      *
      * @throws BrokenPipeException
      */
-    protected function writeBody($socket, RequestInterface $request, $bufferSize = 8192)
+    protected function writeBody($socket, RequestInterface $request, int $bufferSize = 8192)
     {
         $body = $request->getBody();
 
@@ -60,11 +58,8 @@ trait RequestWriter
 
     /**
      * Produce the header of request as a string based on a PSR Request.
-     *
-     *
-     * @return string
      */
-    protected function transformRequestHeadersToString(RequestInterface $request)
+    protected function transformRequestHeadersToString(RequestInterface $request): string
     {
         $message = vsprintf('%s %s HTTP/%s', [
             strtoupper($request->getMethod()),
@@ -87,11 +82,10 @@ trait RequestWriter
      * @see https://secure.phabricator.com/rPHU69490c53c9c2ef2002bc2dd4cecfe9a4b080b497
      *
      * @param resource $stream The stream resource
-     * @param string   $bytes  Bytes written in the stream
      *
      * @return bool|int false if pipe is broken, number of bytes written otherwise
      */
-    private function fwrite($stream, $bytes)
+    private function fwrite($stream, string $bytes)
     {
         if (!strlen($bytes)) {
             return 0;

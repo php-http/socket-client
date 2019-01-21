@@ -29,10 +29,8 @@ trait ResponseReader
      *
      * @throws TimeoutException    When the socket timed out
      * @throws BrokenPipeException When the response cannot be read
-     *
-     * @return ResponseInterface
      */
-    protected function readResponse(RequestInterface $request, $socket)
+    protected function readResponse(RequestInterface $request, $socket): ResponseInterface
     {
         $headers = [];
         $reason = null;
@@ -87,11 +85,9 @@ trait ResponseReader
     /**
      * Create the stream.
      *
-     * @param $socket
-     *
-     * @return Stream
+     * @param resource $socket
      */
-    protected function createStream($socket, ResponseInterface $response)
+    protected function createStream($socket, ResponseInterface $response): Stream
     {
         $size = null;
 

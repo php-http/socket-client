@@ -105,7 +105,7 @@ class Client implements HttpClient
      *
      * @return resource Socket resource
      */
-    protected function createSocket(RequestInterface $request, $remote, $useSsl)
+    protected function createSocket(RequestInterface $request, string $remote, bool $useSsl)
     {
         $errNo = null;
         $errMsg = null;

@@ -48,7 +48,7 @@ class Stream implements StreamInterface
      * @param resource $socket
      * @param int      $size
      */
-    public function __construct($socket, $size = null)
+    public function __construct($socket, ?int $size = null)
     {
         $this->socket = $socket;
         $this->size = $size;
