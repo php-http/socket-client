@@ -12,7 +12,7 @@ class SocketHttpClientTest extends BaseTestCase
     {
         $messageFactory = new GuzzleMessageFactory();
 
-        return new HttpMethodsClient(new SocketHttpClient($messageFactory, $options), $messageFactory);
+        return new HttpMethodsClient(new SocketHttpClient($options), $messageFactory);
     }
 
     public function testTcpSocketDomain()
@@ -26,7 +26,7 @@ class SocketHttpClientTest extends BaseTestCase
     }
 
     /**
-     * @expectedException \Http\Client\Exception\NetworkException
+     * @expectedException \Http\Client\Socket\Exception\NetworkException
      */
     public function testNoRemote()
     {
@@ -55,7 +55,7 @@ class SocketHttpClientTest extends BaseTestCase
     }
 
     /**
-     * @expectedException \Http\Client\Exception\NetworkException
+     * @expectedException \Http\Client\Socket\Exception\NetworkException
      */
     public function testBrokenSocket()
     {
@@ -95,7 +95,7 @@ class SocketHttpClientTest extends BaseTestCase
     }
 
     /**
-     * @expectedException \Http\Client\Exception\NetworkException
+     * @expectedException \Http\Client\Socket\Exception\NetworkException
      */
     public function testNetworkExceptionOnConnectError()
     {
@@ -173,7 +173,7 @@ class SocketHttpClientTest extends BaseTestCase
     }
 
     /**
-     * @expectedException \Http\Client\Exception\NetworkException
+     * @expectedException \Http\Client\Socket\Exception\NetworkException
      */
     public function testNetworkExceptionOnSslError()
     {
@@ -184,7 +184,7 @@ class SocketHttpClientTest extends BaseTestCase
     }
 
     /**
-     * @expectedException \Http\Client\Exception\NetworkException
+     * @expectedException \Http\Client\Socket\Exception\NetworkException
      */
     public function testNetworkExceptionOnTimeout()
     {

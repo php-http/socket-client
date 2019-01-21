@@ -4,6 +4,7 @@ namespace Http\Client\Socket;
 
 use Http\Client\Socket\Exception\StreamException;
 use Http\Client\Socket\Exception\TimeoutException;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -43,15 +44,20 @@ class Stream implements StreamInterface
     private $readed = 0;
 
     /**
+     * @var RequestInterface request associated to this stream
+     */
+    private $request;
+
+    /**
      * Create the stream.
      *
      * @param resource $socket
-     * @param int      $size
      */
-    public function __construct($socket, ?int $size = null)
+    public function __construct(RequestInterface $request, $socket, ?int $size = null)
     {
         $this->socket = $socket;
         $this->size = $size;
+        $this->request = $request;
     }
 
     /**
@@ -175,7 +181,7 @@ class Stream implements StreamInterface
         $read = fread($this->socket, $length);
 
         if ($this->getMetadata('timed_out')) {
-            throw new TimeoutException('Stream timed out while reading data');
+            throw new TimeoutException('Stream timed out while reading data', $this->request);
         }
 
         $this->readed += strlen($read);

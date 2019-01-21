@@ -6,8 +6,6 @@ use Http\Client\HttpClient;
 use Http\Client\Socket\Exception\ConnectionException;
 use Http\Client\Socket\Exception\InvalidRequestException;
 use Http\Client\Socket\Exception\SSLConnectionException;
-use Http\Discovery\MessageFactoryDiscovery;
-use Http\Message\ResponseFactory;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -38,8 +36,7 @@ class Client implements HttpClient
     /**
      * Constructor.
      *
-     * @param ResponseFactory $responseFactory Response factory for creating response
-     * @param array           $config          {
+     * @param array $config {
      *
      *    @var string $remote_socket          Remote entrypoint (can be a tcp or unix domain address)
      *    @var int    $timeout                Timeout before canceling request
@@ -50,13 +47,8 @@ class Client implements HttpClient
      *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
      * }
      */
-    public function __construct(ResponseFactory $responseFactory = null, array $config = [])
+    public function __construct(array $config = [])
     {
-        if (null === $responseFactory) {
-            $responseFactory = MessageFactoryDiscovery::find();
-        }
-
-        $this->responseFactory = $responseFactory;
         $this->config = $this->configure($config);
     }
 

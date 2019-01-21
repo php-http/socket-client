@@ -5,6 +5,7 @@ namespace Http\Client\Socket;
 use Http\Client\Socket\Exception\BrokenPipeException;
 use Http\Client\Socket\Exception\TimeoutException;
 use Http\Message\ResponseFactory;
+use Nyholm\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -76,8 +77,8 @@ trait ResponseReader
                 : '';
         }
 
-        $response = $this->responseFactory->createResponse($status, $reason, $responseHeaders, null, $protocol);
-        $stream = $this->createStream($socket, $response);
+        $response = new Response($status, $responseHeaders, null, $protocol, $reason);
+        $stream = $this->createStream($socket, $request, $response);
 
         return $response->withBody($stream);
     }
@@ -87,7 +88,7 @@ trait ResponseReader
      *
      * @param resource $socket
      */
-    protected function createStream($socket, ResponseInterface $response): Stream
+    protected function createStream($socket, RequestInterface $request, ResponseInterface $response): Stream
     {
         $size = null;
 
@@ -95,6 +96,6 @@ trait ResponseReader
             $size = (int) $response->getHeaderLine('Content-Length');
         }
 
-        return new Stream($socket, $size);
+        return new Stream($request, $socket, $size);
     }
 }

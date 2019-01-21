@@ -3,6 +3,7 @@
 namespace Http\Client\Socket\Tests;
 
 use Http\Client\Socket\Stream;
+use Nyholm\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 
 class StreamTest extends TestCase
@@ -13,7 +14,7 @@ class StreamTest extends TestCase
         fwrite($socket, $body);
         fseek($socket, 0);
 
-        return new Stream($socket, $useSize ? strlen($body) : null);
+        return new Stream(new Request('GET', '/'), $socket, $useSize ? strlen($body) : null);
     }
 
     public function testToString()
@@ -56,7 +57,7 @@ class StreamTest extends TestCase
         $socket = fopen('php://memory', 'rw+');
         fwrite($socket, 'Body');
         fseek($socket, 0);
-        $stream = new Stream($socket);
+        $stream = new Stream(new Request('GET', '/'), $socket);
 
         $this->assertEquals('Body', $stream->getContents());
         fwrite($socket, "\0");
@@ -116,7 +117,7 @@ class StreamTest extends TestCase
         $socket = fsockopen('php.net', 80);
         socket_set_timeout($socket, 0, 100);
 
-        $stream = new Stream($socket, 50);
+        $stream = new Stream(new Request('GET', '/'), $socket, 50);
         $stream->getContents();
     }
 
@@ -138,7 +139,7 @@ class StreamTest extends TestCase
         fwrite($socket, 'Body');
         fseek($socket, 0);
 
-        $stream = new Stream($socket);
+        $stream = new Stream(new Request('GET', '/'), $socket);
         $stream->close();
 
         $this->assertFalse(is_resource($socket));
