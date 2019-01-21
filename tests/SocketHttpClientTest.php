@@ -68,6 +68,8 @@ class SocketHttpClientTest extends BaseTestCase
     {
         $this->startServer('tcp-ssl-server');
         $client = $this->createClient([
+            'remote_socket' => 'tcp://127.0.0.1:19999',
+            'ssl' => true,
             'stream_context_options' => [
                 'ssl' => [
                     'peer_name' => 'socket-adapter',
@@ -75,7 +77,7 @@ class SocketHttpClientTest extends BaseTestCase
                 ],
             ],
         ]);
-        $response = $client->get('https://127.0.0.1:19999/', []);
+        $response = $client->get('/', []);
 
         $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
@@ -184,11 +186,12 @@ class SocketHttpClientTest extends BaseTestCase
     }
 
     /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
+     * @expectedException \Http\Client\Socket\Exception\TimeoutException
      */
     public function testNetworkExceptionOnTimeout()
     {
-        $client = $this->createClient(['timeout' => 10]);
-        $client->get('http://php.net', []);
+        $client = $this->createClient(['timeout' => 1]);
+        $response = $client->get('https://php.net', []);
+        $response->getBody()->getContents();
     }
 }
