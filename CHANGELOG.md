@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.0.0 (unreleased)
+
+ * PSR18 and HTTPlug 2 support
+ * Remove support for php 5.5, 5.6 and 7.0
+
 ## 1.4.0
 
  * Support for Symfony 4
