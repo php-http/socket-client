@@ -26,12 +26,17 @@ matrix:
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci"
        -  php: 7.2
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest"
+        - php: 7.3
+          env: USE_ASYNC=true
 
 before_install:
     - travis_retry composer self-update
+    - if [[ "$USE_ASYNC" = true ]]; then git clone https://github.com/concurrent-php/ext-async.git /tmp/async; fi
+    - if [[ "$USE_ASYNC" = true ]]; then cd /tmp/async && phpize && ./configure && sudo make install; fi
+    - if [[ "$USE_ASYNC" = true ]]; then echo "extension = async.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini && php -m && cd $TRAVIS_BUILD_DIR; fi
 
 install:
-    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
+    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction --ignore-platform-reqs
 
 before_script:
     - vendor/bin/http_test_server > /dev/null 2>&1 &
