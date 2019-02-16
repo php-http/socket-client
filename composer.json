@@ -11,6 +11,7 @@
     "require": {
         "php": "^7.1",
         "nyholm/psr7": "^1.0",
+        "php-http/httplug": "^2.0",
         "psr/http-client": "^1.0",
         "symfony/options-resolver": "^2.6 || ^3.0 || ^4.0"
     },
