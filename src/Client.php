@@ -6,6 +6,7 @@ use Http\Client\HttpClient;
 use Http\Client\Socket\Exception\ConnectionException;
 use Http\Client\Socket\Exception\InvalidRequestException;
 use Http\Client\Socket\Exception\SSLConnectionException;
+use Http\Client\Socket\Exception\TimeoutException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -116,6 +117,10 @@ class Client implements HttpClient
         $socket = @stream_socket_client($remote, $errNo, $errMsg, floor($this->config['timeout'] / 1000), STREAM_CLIENT_CONNECT, $this->config['stream_context']);
 
         if (false === $socket) {
+            if (110 === $errNo) {
+                throw new TimeoutException($errMsg, $request);
+            }
+
             throw new ConnectionException($errMsg, $request);
         }
 
