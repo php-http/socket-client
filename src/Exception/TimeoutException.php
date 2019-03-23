@@ -2,6 +2,6 @@
 
 namespace Http\Client\Socket\Exception;
 
-class TimeoutException extends StreamException
+class TimeoutException extends NetworkException
 {
 }

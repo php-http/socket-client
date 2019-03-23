@@ -10,14 +10,14 @@ class BaseTestCase extends TestCase
 
     public function startServer($name)
     {
-        $filename = __DIR__ . '/server/' . $name . '.php';
-        $pipes    = [];
+        $filename = __DIR__.'/server/'.$name.'.php';
+        $pipes = [];
 
         if (!Semaphore::acquire()) {
             $this->fail('Could not connect to server');
         }
 
-        $this->servers[$name] = proc_open('php '. $filename, [], $pipes);
+        $this->servers[$name] = proc_open('php '.$filename, [], $pipes);
         sleep(1);
     }
 

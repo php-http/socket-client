@@ -6,9 +6,9 @@ use Http\Client\HttpClient;
 use Http\Client\Socket\Exception\ConnectionException;
 use Http\Client\Socket\Exception\InvalidRequestException;
 use Http\Client\Socket\Exception\SSLConnectionException;
-use Http\Discovery\MessageFactoryDiscovery;
-use Http\Message\ResponseFactory;
+use Http\Client\Socket\Exception\TimeoutException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,14 +31,15 @@ class Client implements HttpClient
         'stream_context_param' => [],
         'ssl' => null,
         'write_buffer_size' => 8192,
-        'ssl_method' => STREAM_CRYPTO_METHOD_TLS_CLIENT,
+        'ssl_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
     ];
+
+    private $hasAsync;
 
     /**
      * Constructor.
      *
-     * @param ResponseFactory $responseFactory Response factory for creating response
-     * @param array           $config          {
+     * @param array $config {
      *
      *    @var string $remote_socket          Remote entrypoint (can be a tcp or unix domain address)
      *    @var int    $timeout                Timeout before canceling request
@@ -46,23 +47,28 @@ class Client implements HttpClient
      *    @var array  $stream_context_param   Context params as defined in the PHP documentation
      *    @var bool   $ssl                    Use ssl, default to scheme from request, false if not present
      *    @var int    $write_buffer_size      Buffer when writing the request body, defaults to 8192
-     *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLS_CLIENT
+     *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
      * }
      */
-    public function __construct(ResponseFactory $responseFactory = null, array $config = [])
+    public function __construct($config1 = [], $config2 = null, array $config = [])
     {
-        if (null === $responseFactory) {
-            $responseFactory = MessageFactoryDiscovery::find();
+        $this->hasAsync = PHP_VERSION_ID >= 70300 && \extension_loaded('async');
+
+        if (\is_array($config1)) {
+            $this->config = $this->configure($config1);
+
+            return;
         }
 
-        $this->responseFactory = $responseFactory;
+        @trigger_error(E_USER_DEPRECATED, 'Passing a Psr\Http\Message\ResponseFactoryInterface and a Psr\Http\Message\StreamFactoryInterface to SocketClient is deprecated, and will be removed in 3.0, you should only pass config options.');
+
         $this->config = $this->configure($config);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function sendRequest(RequestInterface $request)
+    public function sendRequest(RequestInterface $request): ResponseInterface
     {
         $remote = $this->config['remote_socket'];
         $useSsl = $this->config['ssl'];
@@ -104,13 +110,17 @@ class Client implements HttpClient
      *
      * @return resource Socket resource
      */
-    protected function createSocket(RequestInterface $request, $remote, $useSsl)
+    protected function createSocket(RequestInterface $request, string $remote, bool $useSsl)
     {
         $errNo = null;
         $errMsg = null;
         $socket = @stream_socket_client($remote, $errNo, $errMsg, floor($this->config['timeout'] / 1000), STREAM_CLIENT_CONNECT, $this->config['stream_context']);
 
         if (false === $socket) {
+            if (110 === $errNo) {
+                throw new TimeoutException($errMsg, $request);
+            }
+
             throw new ConnectionException($errMsg, $request);
         }
 
@@ -161,7 +171,6 @@ class Client implements HttpClient
     /**
      * Return remote socket from the request.
      *
-     * @param RequestInterface $request
      *
      * @throws InvalidRequestException When no remote can be determined from the request
      *
@@ -180,6 +189,10 @@ class Client implements HttpClient
         // If use the host header if present for the endpoint
         if (empty($host) && $request->hasHeader('Host')) {
             $endpoint = $request->getHeaderLine('Host');
+        }
+
+        if ($this->hasAsync) {
+            return sprintf('async-tcp://%s', $endpoint);
         }
 
         return sprintf('tcp://%s', $endpoint);

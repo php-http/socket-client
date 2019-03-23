@@ -23,7 +23,7 @@ final class Semaphore
                 return false;
             }
         }
-        self::$openConnections++;
+        ++self::$openConnections;
 
         return true;
     }
@@ -35,6 +35,6 @@ final class Semaphore
     {
         // Do no be too quick
         usleep(500000);
-        self::$openConnections--;
+        --self::$openConnections;
     }
 }

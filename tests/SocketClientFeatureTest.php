@@ -3,12 +3,12 @@
 namespace Http\Client\Socket\Tests;
 
 use Http\Client\Tests\HttpFeatureTest;
-use Http\Message\MessageFactory\GuzzleMessageFactory;
 use Http\Client\Socket\Client as SocketHttpClient;
+use Psr\Http\Client\ClientInterface;
 
 class SocketClientFeatureTest extends HttpFeatureTest
 {
-    protected function createClient()
+    protected function createClient(): ClientInterface
     {
         return new SocketHttpClient();
     }

@@ -5,6 +5,7 @@ namespace Http\Client\Socket;
 use Http\Client\Socket\Exception\BrokenPipeException;
 use Http\Client\Socket\Exception\TimeoutException;
 use Http\Message\ResponseFactory;
+use Nyholm\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -25,15 +26,12 @@ trait ResponseReader
     /**
      * Read a response from a socket.
      *
-     * @param RequestInterface $request
-     * @param resource         $socket
+     * @param resource $socket
      *
      * @throws TimeoutException    When the socket timed out
      * @throws BrokenPipeException When the response cannot be read
-     *
-     * @return ResponseInterface
      */
-    protected function readResponse(RequestInterface $request, $socket)
+    protected function readResponse(RequestInterface $request, $socket): ResponseInterface
     {
         $headers = [];
         $reason = null;
@@ -48,7 +46,7 @@ trait ResponseReader
         $metadatas = stream_get_meta_data($socket);
 
         if (array_key_exists('timed_out', $metadatas) && true === $metadatas['timed_out']) {
-            throw new TimeoutException('Error while reading response, stream timed out', null, null, $request);
+            throw new TimeoutException('Error while reading response, stream timed out', $request, null);
         }
 
         $parts = explode(' ', array_shift($headers), 3);
@@ -79,8 +77,8 @@ trait ResponseReader
                 : '';
         }
 
-        $response = $this->responseFactory->createResponse($status, $reason, $responseHeaders, null, $protocol);
-        $stream = $this->createStream($socket, $response);
+        $response = new Response($status, $responseHeaders, null, $protocol, $reason);
+        $stream = $this->createStream($socket, $request, $response);
 
         return $response->withBody($stream);
     }
@@ -88,12 +86,9 @@ trait ResponseReader
     /**
      * Create the stream.
      *
-     * @param $socket
-     * @param ResponseInterface $response
-     *
-     * @return Stream
+     * @param resource $socket
      */
-    protected function createStream($socket, ResponseInterface $response)
+    protected function createStream($socket, RequestInterface $request, ResponseInterface $response): Stream
     {
         $size = null;
 
@@ -101,6 +96,6 @@ trait ResponseReader
             $size = (int) $response->getHeaderLine('Content-Length');
         }
 
-        return new Stream($socket, $size);
+        return new Stream($request, $socket, $size);
     }
 }
