@@ -34,8 +34,6 @@ class Client implements HttpClient
         'ssl_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
     ];
 
-    private $hasAsync;
-
     /**
      * Constructor.
      *
@@ -52,8 +50,6 @@ class Client implements HttpClient
      */
     public function __construct($config1 = [], $config2 = null, array $config = [])
     {
-        $this->hasAsync = PHP_VERSION_ID >= 70300 && \extension_loaded('async');
-
         if (\is_array($config1)) {
             $this->config = $this->configure($config1);
 
@@ -189,10 +185,6 @@ class Client implements HttpClient
         // If use the host header if present for the endpoint
         if (empty($host) && $request->hasHeader('Host')) {
             $endpoint = $request->getHeaderLine('Host');
-        }
-
-        if ($this->hasAsync) {
-            return sprintf('async-tcp://%s', $endpoint);
         }
 
         return sprintf('tcp://%s', $endpoint);

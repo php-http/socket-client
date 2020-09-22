@@ -1,6 +1,6 @@
 # Change Log
 
-## 2.0.0 (unreleased)
+## 2.0.0
 
  * Remove response and stream factory, use direct implementation of nyholm/psr7
  * Async support with ext-async extension: see https://github.com/concurrent-php/ext-async
@@ -20,7 +20,7 @@
    * `ConnectionException`
    * `InvalidRequestException`
    * `SSLConnectionException`
- 
+
 ## 1.2.0
 
  * Dropped PHP 5.4 support
