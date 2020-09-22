@@ -167,7 +167,6 @@ class Client implements HttpClient
     /**
      * Return remote socket from the request.
      *
-     *
      * @throws InvalidRequestException When no remote can be determined from the request
      *
      * @return string
