@@ -2,8 +2,8 @@
 
 namespace Http\Client\Socket\Tests;
 
-use Http\Client\Tests\HttpFeatureTest;
 use Http\Client\Socket\Client as SocketHttpClient;
+use Http\Client\Tests\HttpFeatureTest;
 use Psr\Http\Client\ClientInterface;
 
 class SocketClientFeatureTest extends HttpFeatureTest

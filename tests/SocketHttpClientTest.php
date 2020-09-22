@@ -3,8 +3,8 @@
 namespace Http\Client\Socket\Tests;
 
 use Http\Client\Common\HttpMethodsClient;
-use Http\Message\MessageFactory\GuzzleMessageFactory;
 use Http\Client\Socket\Client as SocketHttpClient;
+use Http\Message\MessageFactory\GuzzleMessageFactory;
 
 class SocketHttpClientTest extends BaseTestCase
 {
