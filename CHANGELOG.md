@@ -3,9 +3,8 @@
 ## 2.0.0
 
  * Remove response and stream factory, use direct implementation of nyholm/psr7
- * Async support with ext-async extension: see https://github.com/concurrent-php/ext-async
  * PSR18 and HTTPlug 2 support
- * Remove support for php 5.5, 5.6 and 7.0
+ * Remove support for php 5.5, 5.6, 7.0 and 7.1
  * SSL Method now defaults to `STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT`
 
 ## 1.4.0
