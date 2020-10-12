@@ -56,7 +56,7 @@ class Client implements HttpClient
             return;
         }
 
-        @trigger_error(E_USER_DEPRECATED, 'Passing a Psr\Http\Message\ResponseFactoryInterface and a Psr\Http\Message\StreamFactoryInterface to SocketClient is deprecated, and will be removed in 3.0, you should only pass config options.');
+        @trigger_error('Passing a Psr\Http\Message\ResponseFactoryInterface and a Psr\Http\Message\StreamFactoryInterface to SocketClient is deprecated, and will be removed in 3.0, you should only pass config options.', E_USER_DEPRECATED);
 
         $this->config = $this->configure($config);
     }
