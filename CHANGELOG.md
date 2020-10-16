@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.1
+
+ * Fix wrong call to trigger_error
+
 ## 2.0.0
 
  * Remove response and stream factory, use direct implementation of nyholm/psr7
