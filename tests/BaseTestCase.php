@@ -28,7 +28,7 @@ class BaseTestCase extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         foreach (array_keys($this->servers) as $name) {
             $this->stopServer($name);
