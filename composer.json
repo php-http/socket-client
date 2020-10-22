@@ -23,7 +23,7 @@
     },
     "provide": {
         "php-http/client-implementation": "1.0",
-        "psr/http-client": "1.0"
+        "psr/http-client-implementation": "1.0"
     },
     "autoload": {
         "psr-4": {
