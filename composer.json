@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.2",
-        "php-http/client-integration-tests": "dev-master",
+        "php-http/client-integration-tests": "^3.0",
         "php-http/message": "^1.0",
         "php-http/client-common": "^2.0"
     },
