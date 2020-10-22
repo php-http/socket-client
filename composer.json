@@ -19,7 +19,8 @@
         "friendsofphp/php-cs-fixer": "^2.2",
         "php-http/client-integration-tests": "^3.0",
         "php-http/message": "^1.9",
-        "php-http/client-common": "^2.3"
+        "php-http/client-common": "^2.3",
+        "phpunit/phpunit": "^8.5.8"
     },
     "provide": {
         "php-http/client-implementation": "1.0",
