@@ -109,11 +109,10 @@ class StreamTest extends TestCase
         $this->assertTrue($stream->isReadable());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\TimeoutException
-     */
     public function testTimeout()
     {
+        $this->expectException(\Http\Client\Socket\Exception\TimeoutException::class);
+
         $socket = fsockopen('php.net', 80);
         socket_set_timeout($socket, 0, 100);
 

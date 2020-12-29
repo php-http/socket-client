@@ -25,11 +25,10 @@ class SocketHttpClientTest extends BaseTestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
-     */
     public function testNoRemote()
     {
+        $this->expectException(\Http\Client\Socket\Exception\NetworkException::class);
+
         $client = $this->createClient();
         $client->get('/', []);
     }
@@ -54,11 +53,10 @@ class SocketHttpClientTest extends BaseTestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
-     */
     public function testBrokenSocket()
     {
+        $this->expectException(\Http\Client\Socket\Exception\NetworkException::class);
+
         $this->startServer('tcp-bugous-server');
         $client = $this->createClient(['remote_socket' => '127.0.0.1:19999']);
         $client->get('/', []);
@@ -96,11 +94,10 @@ class SocketHttpClientTest extends BaseTestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
-     */
     public function testNetworkExceptionOnConnectError()
     {
+        $this->expectException(\Http\Client\Socket\Exception\NetworkException::class);
+
         $client = $this->createClient(['remote_socket' => '127.0.0.1:19999']);
         $client->get('/', []);
     }
@@ -174,22 +171,19 @@ class SocketHttpClientTest extends BaseTestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
-     */
     public function testNetworkExceptionOnSslError()
     {
-        $this->startServer('tcp-server');
+        $this->expectException(\Http\Client\Socket\Exception\NetworkException::class);
 
+        $this->startServer('tcp-server');
         $client = $this->createClient(['remote_socket' => '127.0.0.1:19999', 'ssl' => true]);
         $client->get('/', []);
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\TimeoutException
-     */
     public function testNetworkExceptionOnTimeout()
     {
+        $this->expectException(\Http\Client\Socket\Exception\TimeoutException::class);
+
         $client = $this->createClient(['timeout' => 1]);
         $response = $client->get('https://php.net', []);
         $response->getBody()->getContents();
