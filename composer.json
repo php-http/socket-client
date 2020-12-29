@@ -40,7 +40,8 @@
         "cs-check": "vendor/bin/php-cs-fixer fix --dry-run",
         "cs-fix": "vendor/bin/php-cs-fixer fix",
         "test": "vendor/bin/phpunit",
-        "test-ci": "vendor/bin/phpunit --coverage-clover build/coverage.xml"
+        "test-ci": "vendor/bin/phpunit --coverage-clover build/coverage.xml",
+        "gen-ssl": "tests/server/ssl/generate.sh"
     },
     "extra": {
         "branch-alias": {
