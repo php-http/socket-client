@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -eo pipefail
+
+cd $(dirname $0)
+
 C=FR
 ST=Ile-de-France
 L=Paris
