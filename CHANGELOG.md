@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.3
+
+ * Add php 8 compatibility
+
 ## 2.0.2
 
  * Fixed composer "provide" section to say that we provide `psr/http-client-implementation`
