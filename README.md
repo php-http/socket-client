@@ -31,10 +31,12 @@ $ ./vendor/bin/http_test_server > /dev/null 2>&1 &
 Then generate ssh certificates:
 
 ```bash
-$ cd ./tests/server/ssl 
+$ cd ./tests/server/ssl
 $ ./generate.sh
-$ cd ../../../ 
+$ cd ../../../
 ```
+
+Note: If you are running this on macOS and get the following error: "Error opening CA Private Key privkey.pem", check [this](ssl-macOS.md) file.
 
 Now run the test suite:
 
