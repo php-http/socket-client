@@ -8,6 +8,7 @@ use Http\Client\Socket\Exception\InvalidRequestException;
 use Http\Client\Socket\Exception\SSLConnectionException;
 use Http\Client\Socket\Exception\TimeoutException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,7 +33,9 @@ class Client implements HttpClient
     /**
      * Constructor.
      *
-     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int} $config
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}|ResponseFactoryInterface $config1
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}|null                     $config2 Mistake when refactoring the constructor from version 1 to version 2 - used as $config if set and $configOrResponseFactory is a response factory instance
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}                          $config  intended for version 1 BC, used as $config if $config2 is not set and $configOrResponseFactory is a response factory instance
      *
      * string|null          remote_socket          Remote entrypoint (can be a tcp or unix domain address)
      * int                  timeout                Timeout before canceling request
@@ -51,9 +54,9 @@ class Client implements HttpClient
             return;
         }
 
-        @trigger_error('Passing a Psr\Http\Message\ResponseFactoryInterface and a Psr\Http\Message\StreamFactoryInterface to SocketClient is deprecated, and will be removed in 3.0, you should only pass config options.', E_USER_DEPRECATED);
+        @trigger_error('Passing a Psr\Http\Message\ResponseFactoryInterface to SocketClient is deprecated, and will be removed in 3.0, you should only pass config options.', E_USER_DEPRECATED);
 
-        $this->config = $this->configure($config);
+        $this->config = $this->configure($config2 ?: $config);
     }
 
     /**
