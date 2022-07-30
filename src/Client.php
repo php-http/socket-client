@@ -48,15 +48,15 @@ class Client implements HttpClient
      *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
      * }
      */
-    public function __construct($config1 = [], $config2 = null, array $config = [])
+    public function __construct($configOrResponseFactory = [], array $config = [])
     {
-        if (\is_array($config1)) {
-            $this->config = $this->configure($config1);
+        if (\is_array($configOrResponseFactory)) {
+            $this->config = $this->configure($configOrResponseFactory);
 
             return;
         }
 
-        @trigger_error('Passing a Psr\Http\Message\ResponseFactoryInterface and a Psr\Http\Message\StreamFactoryInterface to SocketClient is deprecated, and will be removed in 3.0, you should only pass config options.', E_USER_DEPRECATED);
+        @trigger_error('Passing a Psr\Http\Message\ResponseFactoryInterface to SocketClient is deprecated, and will be removed in 3.0, you should only pass config options.', E_USER_DEPRECATED);
 
         $this->config = $this->configure($config);
     }
