@@ -1,0 +1,7 @@
+parameters:
+    level: max
+    paths:
+        - src
+    ignoreErrors:
+        - message: '#^Method Http\\Adapter\\React\\Client::sendRequest\(\) should return Psr\\Http\\Message\\ResponseInterface but returns mixed.$#'
+          path: src/Client.php

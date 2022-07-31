@@ -1,10 +1,10 @@
-.puli/
-build/
-vendor/
-composer.lock
-phpspec.yml
-phpunit.xml
-/.php_cs.cache
+/.php-cs-fixer.cache
+/.puli/
+/build/
+/composer.lock
+/phpstan.neon
+/phpunit.xml
 /tests/server/ssl/*.pem
 /tests/server/ssl/*.key
 /tests/server/ssl/*.req
+/vendor/
