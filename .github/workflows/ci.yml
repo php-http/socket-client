@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: composer update --prefer-dist --no-interaction --no-progress
 
+      - name: generate ssl
+        run: cd ./tests/server/ssl && ./generate.sh && pwd && ls -la && cd ../../../
+
       - name: boot test server
         run: vendor/bin/http_test_server > /dev/null 2>&1 &
 
@@ -68,6 +71,9 @@ jobs:
       - name: Install dependencies
         run: composer update --prefer-dist --prefer-stable --prefer-lowest --no-interaction --no-progress
 
+      - name: generate ssl
+        run: cd ./tests/server/ssl && ./generate.sh && pwd && ls -la && cd ../../../
+
       - name: boot test server
         run: vendor/bin/http_test_server > /dev/null 2>&1 &
 
@@ -94,6 +100,9 @@ jobs:
 
       - name: generate ssl
         run: cd ./tests/server/ssl && ./generate.sh && pwd && ls -la && cd ../../../
+
+      - name: boot test server
+        run: vendor/bin/http_test_server > /dev/null 2>&1 &
 
       - name: Execute tests
         run: composer test-ci

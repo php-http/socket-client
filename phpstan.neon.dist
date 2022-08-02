@@ -3,5 +3,38 @@ parameters:
     paths:
         - src
     ignoreErrors:
-        - message: '#^Method Http\\Adapter\\React\\Client::sendRequest\(\) should return Psr\\Http\\Message\\ResponseInterface but returns mixed.$#'
-          path: src/Client.php
+        # phpstan seems confused by passing a variable by reference to stream_select
+        -
+            message: '#^Negated boolean expression is always false.$#'
+            count: 1
+            path: src/RequestWriter.php
+
+        -
+            message: "#^Constructor of class Http\\\\Client\\\\Socket\\\\Client has an unused parameter \\$config2\\.$#"
+            count: 1
+            path: src/Client.php
+
+        -
+            message: "#^Method Http\\\\Client\\\\Socket\\\\Client\\:\\:__construct\\(\\) has parameter \\$config1 with no type specified\\.$#"
+            count: 1
+            path: src/Client.php
+
+        -
+            message: "#^Method Http\\\\Client\\\\Socket\\\\Client\\:\\:__construct\\(\\) has parameter \\$config2 with no type specified\\.$#"
+            count: 1
+            path: src/Client.php
+
+        -
+            message: "#^Method Http\\\\Client\\\\Socket\\\\Client\\:\\:configure\\(\\) should return array\\{remote_socket\\: string\\|null, timeout\\: int, stream_context\\: resource, stream_context_options\\: array\\<string, mixed\\>, stream_context_param\\: array\\<string, mixed\\>, ssl\\: bool\\|null, write_buffer_size\\: int, ssl_method\\: int\\} but returns array\\.$#"
+            count: 1
+            path: src/Client.php
+
+        -
+            message: "#^Parameter \\#1 \\$options of function stream_context_create expects array\\|null, mixed given\\.$#"
+            count: 1
+            path: src/Client.php
+
+        -
+            message: "#^Parameter \\#2 \\$params of function stream_context_create expects array\\|null, mixed given\\.$#"
+            count: 1
+            path: src/Client.php
