@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.0.4
+
+ * Add Symfony 6 compatibility
+
 ## 2.0.3
 
  * Add php 8 compatibility
