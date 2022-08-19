@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/php-http/socket-client.svg?style=flat-square)](https://github.com/php-http/socket-client/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://github.com/php-http/socket-client/actions/workflows/ci.yml/badge.svg)](https://github.com/php-http/socket-client/actions/workflows/ci.yml)
+[![Build Status](https://github.com/php-http/socket-client/actions/workflows/ci.yml/badge.svg?branch=2.x)](https://github.com/php-http/socket-client/actions/workflows/ci.yml)
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-http/socket-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-http/socket-client)
 [![Quality Score](https://img.shields.io/scrutinizer/g/php-http/socket-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-http/socket-client)
 [![Total Downloads](https://img.shields.io/packagist/dt/php-http/socket-client.svg?style=flat-square)](https://packagist.org/packages/php-http/socket-client)
