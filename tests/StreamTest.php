@@ -2,22 +2,24 @@
 
 namespace Http\Client\Socket\Tests;
 
+use Http\Client\Socket\Exception\StreamException;
+use Http\Client\Socket\Exception\TimeoutException;
 use Http\Client\Socket\Stream;
 use Nyholm\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 
 class StreamTest extends TestCase
 {
-    public function createSocket($body, $useSize = true)
+    public function createSocket($body, $useSize = true): Stream
     {
-        $socket = fopen('php://memory', 'rw');
+        $socket = fopen('php://memory', 'rwb');
         fwrite($socket, $body);
         fseek($socket, 0);
 
         return new Stream(new Request('GET', '/'), $socket, $useSize ? strlen($body) : null);
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $stream = $this->createSocket('Body');
 
@@ -25,7 +27,7 @@ class StreamTest extends TestCase
         $stream->close();
     }
 
-    public function testSubsequentCallIsEmpty()
+    public function testSubsequentCallIsEmpty(): void
     {
         $stream = $this->createSocket('Body');
 
@@ -34,16 +36,16 @@ class StreamTest extends TestCase
         $stream->close();
     }
 
-    public function testDetach()
+    public function testDetach(): void
     {
         $stream = $this->createSocket('Body');
         $socket = $stream->detach();
 
-        $this->assertTrue(is_resource($socket));
+        $this->assertIsResource($socket);
         $this->assertNull($stream->detach());
     }
 
-    public function testTell()
+    public function testTell(): void
     {
         $stream = $this->createSocket('Body');
 
@@ -52,9 +54,9 @@ class StreamTest extends TestCase
         $this->assertEquals(4, $stream->tell());
     }
 
-    public function testEof()
+    public function testEof(): void
     {
-        $socket = fopen('php://memory', 'rw+');
+        $socket = fopen('php://memory', 'rwb+');
         fwrite($socket, 'Body');
         fseek($socket, 0);
         $stream = new Stream(new Request('GET', '/'), $socket);
@@ -65,63 +67,52 @@ class StreamTest extends TestCase
         $stream->close();
     }
 
-    public function testNotSeekable()
+    public function testNotSeekable(): void
     {
         $stream = $this->createSocket('Body');
 
         $this->assertFalse($stream->isSeekable());
 
-        try {
-            $stream->seek(0);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Http\Client\Socket\Exception\StreamException', $e);
-        }
+        $this->expectException(StreamException::class);
+        $stream->seek(0);
     }
 
-    public function testNoRewing()
+    public function testNoRewind(): void
     {
         $stream = $this->createSocket('Body');
 
-        try {
-            $stream->rewind();
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Http\Client\Socket\Exception\StreamException', $e);
-        }
+        $this->expectException(StreamException::class);
+        $stream->rewind();
     }
 
-    public function testNotWritable()
+    public function testNotWritable(): void
     {
         $stream = $this->createSocket('Body');
 
         $this->assertFalse($stream->isWritable());
 
-        try {
-            $stream->write('Test');
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Http\Client\Socket\Exception\StreamException', $e);
-        }
+        $this->expectException(StreamException::class);
+        $stream->write('Test');
     }
 
-    public function testIsReadable()
+    public function testIsReadable(): void
     {
         $stream = $this->createSocket('Body');
 
         $this->assertTrue($stream->isReadable());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\TimeoutException
-     */
-    public function testTimeout()
+    public function testTimeout(): void
     {
         $socket = fsockopen('php.net', 80);
-        socket_set_timeout($socket, 0, 100);
+        stream_set_timeout($socket, 0, 100);
 
         $stream = new Stream(new Request('GET', '/'), $socket, 50);
+        $this->expectException(TimeoutException::class);
         $stream->getContents();
     }
 
-    public function testMetadatas()
+    public function testMetadatas(): void
     {
         $stream = $this->createSocket('Body', false);
 
@@ -133,19 +124,19 @@ class StreamTest extends TestCase
         $this->assertTrue($stream->getMetadata('blocked'));
     }
 
-    public function testClose()
+    public function testClose(): void
     {
-        $socket = fopen('php://memory', 'rw+');
+        $socket = fopen('php://memory', 'rwb+');
         fwrite($socket, 'Body');
         fseek($socket, 0);
 
         $stream = new Stream(new Request('GET', '/'), $socket);
         $stream->close();
 
-        $this->assertFalse(is_resource($socket));
+        $this->assertFalse(is_resource($socket)); // phpstorm thinks we could assertNotIsResource, but closed resources seem to behave differently
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $stream = $this->createSocket('Body');
 

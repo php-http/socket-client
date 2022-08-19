@@ -48,8 +48,8 @@ trait ResponseReader
         if (array_key_exists('timed_out', $metadatas) && true === $metadatas['timed_out']) {
             throw new TimeoutException('Error while reading response, stream timed out', $request, null);
         }
-
-        $parts = explode(' ', array_shift($headers), 3);
+        $header = array_shift($headers);
+        $parts = null !== $header ? explode(' ', $header, 3) : [];
 
         if (count($parts) <= 1) {
             throw new BrokenPipeException('Cannot read the response', $request);
@@ -77,7 +77,7 @@ trait ResponseReader
                 : '';
         }
 
-        $response = new Response($status, $responseHeaders, null, $protocol, $reason);
+        $response = new Response((int) $status, $responseHeaders, null, $protocol, $reason);
         $stream = $this->createStream($socket, $request, $response);
 
         return $response->withBody($stream);
@@ -94,6 +94,9 @@ trait ResponseReader
 
         if ($response->hasHeader('Content-Length')) {
             $size = (int) $response->getHeaderLine('Content-Length');
+        }
+        if ($size < 0) {
+            $size = null;
         }
 
         return new Stream($request, $socket, $size);

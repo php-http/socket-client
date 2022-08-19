@@ -24,29 +24,24 @@ class Client implements HttpClient
     use RequestWriter;
     use ResponseReader;
 
-    private $config = [
-        'remote_socket' => null,
-        'timeout' => null,
-        'stream_context_options' => [],
-        'stream_context_param' => [],
-        'ssl' => null,
-        'write_buffer_size' => 8192,
-        'ssl_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
-    ];
+    /**
+     * @var array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, ssl: ?boolean, write_buffer_size: int, ssl_method: int}
+     */
+    private $config;
 
     /**
      * Constructor.
      *
-     * @param array $config {
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int} $config
      *
-     *    @var string $remote_socket          Remote entrypoint (can be a tcp or unix domain address)
-     *    @var int    $timeout                Timeout before canceling request
-     *    @var array  $stream_context_options Context options as defined in the PHP documentation
-     *    @var array  $stream_context_param   Context params as defined in the PHP documentation
-     *    @var bool   $ssl                    Use ssl, default to scheme from request, false if not present
-     *    @var int    $write_buffer_size      Buffer when writing the request body, defaults to 8192
-     *    @var int    $ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
-     * }
+     * string|null          remote_socket          Remote entrypoint (can be a tcp or unix domain address)
+     * int                  timeout                Timeout before canceling request
+     * stream               resource               The initialized stream context, if not set the context is created from the options and param.
+     * array<string, mixed> stream_context_options Context options as defined in the PHP documentation
+     * array<string, mixed> stream_context_param   Context params as defined in the PHP documentation
+     * boolean              ssl                    Use ssl, default to scheme from request, false if not present
+     * int                  write_buffer_size      Buffer when writing the request body, defaults to 8192
+     * int                  ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
      */
     public function __construct($config1 = [], $config2 = null, array $config = [])
     {
@@ -120,10 +115,10 @@ class Client implements HttpClient
             throw new ConnectionException($errMsg, $request);
         }
 
-        stream_set_timeout($socket, floor($this->config['timeout'] / 1000), $this->config['timeout'] % 1000);
+        stream_set_timeout($socket, (int) floor($this->config['timeout'] / 1000), $this->config['timeout'] % 1000);
 
         if ($useSsl && false === @stream_socket_enable_crypto($socket, true, $this->config['ssl_method'])) {
-            throw new SSLConnectionException(sprintf('Cannot enable tls: %s', error_get_last()['message']), $request);
+            throw new SSLConnectionException(sprintf('Cannot enable tls: %s', error_get_last()['message'] ?? 'no error reported'), $request);
         }
 
         return $socket;
@@ -133,6 +128,8 @@ class Client implements HttpClient
      * Close the socket, used when having an error.
      *
      * @param resource $socket
+     *
+     * @return void
      */
     protected function closeSocket($socket)
     {
@@ -142,19 +139,26 @@ class Client implements HttpClient
     /**
      * Return configuration for the socket client.
      *
-     * @param array $config Configuration from user
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int} $config
      *
-     * @return array Configuration resolved
+     * @return array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, ssl: ?boolean, write_buffer_size: int, ssl_method: int}
      */
     protected function configure(array $config = [])
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefaults($this->config);
+        $resolver->setDefaults([
+            'remote_socket' => null,
+            'timeout' => null,
+            'stream_context_options' => [],
+            'stream_context_param' => [],
+            'ssl' => null,
+            'write_buffer_size' => 8192,
+            'ssl_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
+        ]);
         $resolver->setDefault('stream_context', function (Options $options) {
             return stream_context_create($options['stream_context_options'], $options['stream_context_param']);
         });
-
-        $resolver->setDefault('timeout', ini_get('default_socket_timeout') * 1000);
+        $resolver->setDefault('timeout', ((int) ini_get('default_socket_timeout')) * 1000);
 
         $resolver->setAllowedTypes('stream_context_options', 'array');
         $resolver->setAllowedTypes('stream_context_param', 'array');

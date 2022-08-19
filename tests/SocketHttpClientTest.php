@@ -4,6 +4,8 @@ namespace Http\Client\Socket\Tests;
 
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Socket\Client as SocketHttpClient;
+use Http\Client\Socket\Exception\NetworkException;
+use Http\Client\Socket\Exception\TimeoutException;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
 
 class SocketHttpClientTest extends BaseTestCase
@@ -21,30 +23,26 @@ class SocketHttpClientTest extends BaseTestCase
         $client = $this->createClient(['remote_socket' => '127.0.0.1:19999']);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
-     */
-    public function testNoRemote()
+    public function testNoRemote(): void
     {
         $client = $this->createClient();
+        $this->expectException(NetworkException::class);
         $client->get('/', []);
     }
 
-    public function testRemoteInUri()
+    public function testRemoteInUri(): void
     {
         $this->startServer('tcp-server');
         $client = $this->createClient();
         $response = $client->get('http://127.0.0.1:19999/', []);
 
-        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testRemoteInHostHeader()
+    public function testRemoteInHostHeader(): void
     {
         $this->startServer('tcp-server');
         $client = $this->createClient();
@@ -54,17 +52,15 @@ class SocketHttpClientTest extends BaseTestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
-     */
-    public function testBrokenSocket()
+    public function testBrokenSocket(): void
     {
         $this->startServer('tcp-bugous-server');
         $client = $this->createClient(['remote_socket' => '127.0.0.1:19999']);
+        $this->expectException(NetworkException::class);
         $client->get('/', []);
     }
 
-    public function testSslRemoteInUri()
+    public function testSslRemoteInUri(): void
     {
         $this->startServer('tcp-ssl-server');
         $client = $this->createClient([
@@ -83,7 +79,7 @@ class SocketHttpClientTest extends BaseTestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testUnixSocketDomain()
+    public function testUnixSocketDomain(): void
     {
         $this->startServer('unix-domain-server');
 
@@ -92,16 +88,13 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
-     */
-    public function testNetworkExceptionOnConnectError()
+    public function testNetworkExceptionOnConnectError(): void
     {
         $client = $this->createClient(['remote_socket' => '127.0.0.1:19999']);
+        $this->expectException(NetworkException::class);
         $client->get('/', []);
     }
 
@@ -121,16 +114,11 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testSslConnectionWithClientCertificate()
+    public function testSslConnectionWithClientCertificate(): void
     {
-        if (version_compare(PHP_VERSION, '5.6', '<')) {
-            $this->markTestSkipped('Test can only run on php 5.6 and superior (for capturing peer certificate)');
-        }
-
         $this->startServer('tcp-ssl-server-client');
 
         $client = $this->createClient([
@@ -146,16 +134,11 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testInvalidSslConnectionWithClientCertificate()
+    public function testInvalidSslConnectionWithClientCertificate(): void
     {
-        if (version_compare(PHP_VERSION, '5.6', '<')) {
-            $this->markTestSkipped('Test can only run on php 5.6 and superior (for capturing peer certificate)');
-        }
-
         $this->startServer('tcp-ssl-server-client');
 
         $client = $this->createClient([
@@ -170,27 +153,22 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\NetworkException
-     */
-    public function testNetworkExceptionOnSslError()
+    public function testNetworkExceptionOnSslError(): void
     {
         $this->startServer('tcp-server');
 
         $client = $this->createClient(['remote_socket' => '127.0.0.1:19999', 'ssl' => true]);
+        $this->expectException(NetworkException::class);
         $client->get('/', []);
     }
 
-    /**
-     * @expectedException \Http\Client\Socket\Exception\TimeoutException
-     */
-    public function testNetworkExceptionOnTimeout()
+    public function testNetworkExceptionOnTimeout(): void
     {
         $client = $this->createClient(['timeout' => 1]);
+        $this->expectException(TimeoutException::class);
         $response = $client->get('https://php.net', []);
         $response->getBody()->getContents();
     }

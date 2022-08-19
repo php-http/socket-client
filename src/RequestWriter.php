@@ -19,6 +19,8 @@ trait RequestWriter
      *
      * @param resource $socket
      *
+     * @return void
+     *
      * @throws BrokenPipeException
      */
     protected function writeRequest($socket, RequestInterface $request, int $bufferSize = 8192)
@@ -36,6 +38,8 @@ trait RequestWriter
      * Write Body of the request.
      *
      * @param resource $socket
+     *
+     * @return void
      *
      * @throws BrokenPipeException
      */

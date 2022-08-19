@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  supported-versions-matrix:
+    name: Supported Versions Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.supported-versions-matrix.outputs.version }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: supported-versions-matrix
+        uses: WyriHaximus/github-action-composer-php-versions-in-range@v1
+  latest:
+    name: PHP ${{ matrix.php }} Latest
+    runs-on: ubuntu-latest
+    needs:
+      - supported-versions-matrix
+    strategy:
+      matrix:
+        php: ${{ fromJson(needs.supported-versions-matrix.outputs.version) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: generate ssl
+        run: cd ./tests/server/ssl && ./generate.sh && pwd && ls -la && cd ../../../
+
+      - name: boot test server
+        run: vendor/bin/http_test_server > /dev/null 2>&1 &
+
+      - name: Execute tests
+        run: composer test
+
+  lowest:
+    name: PHP ${{ matrix.php }} Lowest
+    runs-on: ubuntu-latest
+    needs:
+      - supported-versions-matrix
+    strategy:
+      matrix:
+        php: ${{ fromJson(needs.supported-versions-matrix.outputs.version) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --prefer-stable --prefer-lowest --no-interaction --no-progress
+
+      - name: generate ssl
+        run: cd ./tests/server/ssl && ./generate.sh && pwd && ls -la && cd ../../../
+
+      - name: boot test server
+        run: vendor/bin/http_test_server > /dev/null 2>&1 &
+
+      - name: Execute tests
+        run: composer test
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          tools: composer
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: generate ssl
+        run: cd ./tests/server/ssl && ./generate.sh && pwd && ls -la && cd ../../../
+
+      - name: boot test server
+        run: vendor/bin/http_test_server > /dev/null 2>&1 &
+
+      - name: Execute tests
+        run: composer test-ci
