@@ -1,6 +1,6 @@
 # Change Log
 
-## 2.0.5 (unreleased)
+## 2.0.5
 
 * Fixed constructor to work nicely with version 1 style arguments (e.g. HttplugBundle)
 * Fixed PHP 8 compatibility for stream timeouts
