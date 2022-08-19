@@ -1,16 +1,13 @@
 # Change Log
 
-## 2.0.5
+## 2.1.1
 
-* Fixed constructor to work nicely with version 1 style arguments (e.g. HttplugBundle)
-* Fixed PHP 8 compatibility for stream timeouts
-* Renamed `master` branch to `2.x` for semantic branch naming.
-
-## 2.0.4
-
+ * Fixed constructor to work nicely with version 1 style arguments (e.g. HttplugBundle)
+ * Fixed PHP 8 compatibility for stream timeouts
+ * Renamed `master` branch to `2.x` for semantic branch naming.
  * Add Symfony 6 compatibility
 
-## 2.0.3
+## 2.1.0
 
  * Add php 8 compatibility
 
