@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.0.5 (unreleased)
+
+* Fixed PHP 8 compatibility for stream timeouts
+* Renamed `master` branch to `2.x` for semantic branch naming.
+
 ## 2.0.4
 
  * Add Symfony 6 compatibility
