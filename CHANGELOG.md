@@ -2,6 +2,7 @@
 
 ## 2.0.5 (unreleased)
 
+* Fixed constructor to work nicely with version 1 style arguments (e.g. HttplugBundle)
 * Fixed PHP 8 compatibility for stream timeouts
 * Renamed `master` branch to `2.x` for semantic branch naming.
 

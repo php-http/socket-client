@@ -10,21 +10,6 @@ parameters:
             path: src/RequestWriter.php
 
         -
-            message: "#^Constructor of class Http\\\\Client\\\\Socket\\\\Client has an unused parameter \\$config2\\.$#"
-            count: 1
-            path: src/Client.php
-
-        -
-            message: "#^Method Http\\\\Client\\\\Socket\\\\Client\\:\\:__construct\\(\\) has parameter \\$config1 with no type specified\\.$#"
-            count: 1
-            path: src/Client.php
-
-        -
-            message: "#^Method Http\\\\Client\\\\Socket\\\\Client\\:\\:__construct\\(\\) has parameter \\$config2 with no type specified\\.$#"
-            count: 1
-            path: src/Client.php
-
-        -
             message: "#^Method Http\\\\Client\\\\Socket\\\\Client\\:\\:configure\\(\\) should return array\\{remote_socket\\: string\\|null, timeout\\: int, stream_context\\: resource, stream_context_options\\: array\\<string, mixed\\>, stream_context_param\\: array\\<string, mixed\\>, ssl\\: bool\\|null, write_buffer_size\\: int, ssl_method\\: int\\} but returns array\\.$#"
             count: 1
             path: src/Client.php
