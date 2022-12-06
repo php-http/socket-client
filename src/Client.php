@@ -2,14 +2,20 @@
 
 namespace Http\Client\Socket;
 
-use Http\Client\HttpClient;
 use Http\Client\Socket\Exception\ConnectionException;
 use Http\Client\Socket\Exception\InvalidRequestException;
 use Http\Client\Socket\Exception\SSLConnectionException;
 use Http\Client\Socket\Exception\TimeoutException;
+use Http\Message\Encoding\ChunkStream;
+use Http\Message\Encoding\DechunkStream;
+use Http\Message\Encoding\DecompressStream;
+use Http\Message\Encoding\GzipDecodeStream;
+use Nyholm\Psr7\Uri;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,7 +26,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Joel Wurtz <joel.wurtz@gmail.com>
  */
-class Client implements HttpClient
+class Client implements ClientInterface
 {
     use RequestWriter;
     use ResponseReader;
@@ -34,8 +40,6 @@ class Client implements HttpClient
      * Constructor.
      *
      * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}|ResponseFactoryInterface $config1
-     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}|null                     $config2 Mistake when refactoring the constructor from version 1 to version 2 - used as $config if set and $configOrResponseFactory is a response factory instance
-     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}                          $config  intended for version 1 BC, used as $config if $config2 is not set and $configOrResponseFactory is a response factory instance
      *
      * string|null          remote_socket          Remote entrypoint (can be a tcp or unix domain address)
      * int                  timeout                Timeout before canceling request
@@ -46,17 +50,9 @@ class Client implements HttpClient
      * int                  write_buffer_size      Buffer when writing the request body, defaults to 8192
      * int                  ssl_method             Crypto method for ssl/tls, see PHP doc, defaults to STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT
      */
-    public function __construct($config1 = [], $config2 = null, array $config = [])
+    public function __construct(array $config1 = [])
     {
-        if (\is_array($config1)) {
-            $this->config = $this->configure($config1);
-
-            return;
-        }
-
-        @trigger_error('Passing a Psr\Http\Message\ResponseFactoryInterface to SocketClient is deprecated, and will be removed in 3.0, you should only pass config options.', E_USER_DEPRECATED);
-
-        $this->config = $this->configure($config2 ?: $config);
+        $this->config = $this->configure($config1);
     }
 
     /**
@@ -79,18 +75,114 @@ class Client implements HttpClient
             $useSsl = ('https' === $request->getUri()->getScheme());
         }
 
+        $request = $this->addHost($request);
+        $request = $this->addContentLength($request);
+        $request = $this->addDecoder($request);
+
         $socket = $this->createSocket($request, $remote, $useSsl);
 
         try {
             $this->writeRequest($socket, $request, $this->config['write_buffer_size']);
             $response = $this->readResponse($request, $socket);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->closeSocket($socket);
 
             throw $e;
         }
 
+        return $this->decodeResponse($response);
+    }
+
+    protected function decodeResponse(ResponseInterface $response): ResponseInterface
+    {
+        $response = $this->decodeOnEncodingHeader('Transfer-Encoding', $response);
+        return $this->decodeOnEncodingHeader('Content-Encoding', $response);
+    }
+
+    private function decodeOnEncodingHeader(string $headerName, ResponseInterface $response): ResponseInterface
+    {
+        if ($response->hasHeader($headerName)) {
+            $encodings = $response->getHeader($headerName);
+            $newEncodings = [];
+
+            while ($encoding = array_pop($encodings)) {
+                $stream = $this->decorateStream($encoding, $response->getBody());
+
+                if (false === $stream) {
+                    array_unshift($newEncodings, $encoding);
+
+                    continue;
+                }
+
+                $response = $response->withBody($stream);
+            }
+
+            if (\count($newEncodings) > 0) {
+                $response = $response->withHeader($headerName, $newEncodings);
+            } else {
+                $response = $response->withoutHeader($headerName);
+            }
+        }
+
         return $response;
+    }
+
+    private function decorateStream(string $encoding, StreamInterface $stream)
+    {
+        if ('chunked' === strtolower($encoding)) {
+            return new DechunkStream($stream);
+        }
+
+        if ('deflate' === strtolower($encoding)) {
+            return new DecompressStream($stream);
+        }
+
+        if ('gzip' === strtolower($encoding)) {
+            return new GzipDecodeStream($stream);
+        }
+
+        return false;
+    }
+
+    /**
+     * @todo: implement correctly.
+     */
+    protected function addHost(RequestInterface $request): RequestInterface
+    {
+        $host = new Uri('http://localhost');
+        $uri = $request->getUri()
+            ->withHost($host->getHost())
+            ->withScheme($host->getScheme())
+            ->withPort($host->getPort());
+
+        return $request->withUri($uri);
+    }
+
+    protected function addContentLength(RequestInterface $request): RequestInterface
+    {
+        if (!$request->hasHeader('Content-Length')) {
+            $stream = $request->getBody();
+
+            // Cannot determine the size so we use a chunk stream
+            if (null === $stream->getSize()) {
+                $stream = new ChunkStream($stream);
+                $request = $request->withBody($stream);
+                $request = $request->withAddedHeader('Transfer-Encoding', 'chunked');
+            } else {
+                $request = $request->withHeader('Content-Length', (string) $stream->getSize());
+            }
+        }
+
+        return $request;
+    }
+
+    protected function addDecoder(RequestInterface $request): RequestInterface
+    {
+        $encodings = extension_loaded('zlib') ? ['gzip', 'deflate'] : ['identity'];
+        $request = $request->withHeader('Accept-Encoding', $encodings);
+
+        $encodings[] = 'chunked';
+        return $request->withHeader('TE', $encodings);
     }
 
     /**

@@ -1,11 +1,21 @@
 {
-    "name": "php-http/socket-client",
-    "description": "Socket client for PHP-HTTP",
+    "name": "tarekdj/docker-client",
+    "description": "Docker client for PHP",
     "license": "MIT",
     "authors": [
         {
             "name": "Joel Wurtz",
             "email": "jwurtz@jolicode.com"
+        },
+        {
+            "name": "Tarek Djebali",
+            "email": "tarekdj@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "github",
+            "url": "https://github.com/tarekdj/docker-api-client.git"
         }
     ],
     "require": {
@@ -13,7 +23,8 @@
         "nyholm/psr7": "^1.3",
         "php-http/httplug": "^2.0",
         "psr/http-client": "^1.0",
-        "symfony/options-resolver": "^2.6 || ^3.4 || ^4.4 || ^5.0 || ^6.0"
+        "symfony/options-resolver": "^2.6 || ^3.4 || ^4.4 || ^5.0 || ^6.0",
+        "tarekdj/docker-api-client": "dev-main"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.2 || ^3.0",
