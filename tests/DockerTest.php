@@ -1,12 +1,12 @@
 <?php
 
-namespace Http\Client\Socket\Tests;
+namespace Tarekdj\DockerClient\Tests;
 
 use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\ContentLengthPlugin;
 use Http\Client\Common\Plugin\DecoderPlugin;
 use Http\Client\Common\PluginClientFactory;
-use Http\Client\Socket\Client;
+use Tarekdj\DockerClient\Client;
 use PHPUnit\Framework\TestCase;
 use Nyholm\Psr7\Uri;
 use TestContainersPHP\Docker\ApiClient\Model\SystemInfo;

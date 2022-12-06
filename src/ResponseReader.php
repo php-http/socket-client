@@ -1,9 +1,9 @@
 <?php
 
-namespace Http\Client\Socket;
+namespace Tarekdj\DockerClient;
 
-use Http\Client\Socket\Exception\BrokenPipeException;
-use Http\Client\Socket\Exception\TimeoutException;
+use Tarekdj\DockerClient\Exception\BrokenPipeException;
+use Tarekdj\DockerClient\Exception\TimeoutException;
 use Http\Message\ResponseFactory;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\RequestInterface;

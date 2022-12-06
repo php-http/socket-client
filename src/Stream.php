@@ -1,9 +1,9 @@
 <?php
 
-namespace Http\Client\Socket;
+namespace Tarekdj\DockerClient;
 
-use Http\Client\Socket\Exception\StreamException;
-use Http\Client\Socket\Exception\TimeoutException;
+use Tarekdj\DockerClient\Exception\StreamException;
+use Tarekdj\DockerClient\Exception\TimeoutException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 

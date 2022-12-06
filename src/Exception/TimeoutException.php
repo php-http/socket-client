@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Client\Socket\Exception;
+namespace Tarekdj\DockerClient\Exception;
 
 class TimeoutException extends NetworkException
 {

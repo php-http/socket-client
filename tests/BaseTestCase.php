@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Client\Socket\Tests;
+namespace Tarekdj\DockerClient\Tests;
 
 use PHPUnit\Framework\TestCase;
 

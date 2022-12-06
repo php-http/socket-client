@@ -16,4 +16,4 @@ EOR
 while (!@feof($client)) {
     @fread($client, 1000);
 }
-\Http\Client\Socket\Tests\Semaphore::release();
+\Tarekdj\DockerClient\Tests\Semaphore::release();

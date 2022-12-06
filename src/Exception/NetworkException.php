@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Client\Socket\Exception;
+namespace Tarekdj\DockerClient\Exception;
 
 use Psr\Http\Client\NetworkExceptionInterface;
 use Psr\Http\Message\RequestInterface;

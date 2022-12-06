@@ -1,11 +1,11 @@
 <?php
 
-namespace Http\Client\Socket;
+namespace Tarekdj\DockerClient;
 
-use Http\Client\Socket\Exception\ConnectionException;
-use Http\Client\Socket\Exception\InvalidRequestException;
-use Http\Client\Socket\Exception\SSLConnectionException;
-use Http\Client\Socket\Exception\TimeoutException;
+use Tarekdj\DockerClient\Exception\ConnectionException;
+use Tarekdj\DockerClient\Exception\InvalidRequestException;
+use Tarekdj\DockerClient\Exception\SSLConnectionException;
+use Tarekdj\DockerClient\Exception\TimeoutException;
 use Http\Message\Encoding\ChunkStream;
 use Http\Message\Encoding\DechunkStream;
 use Http\Message\Encoding\DecompressStream;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Http\Client\Socket\Tests;
+namespace Tarekdj\DockerClient\Tests;
 
-use Http\Client\Socket\Exception\StreamException;
-use Http\Client\Socket\Exception\TimeoutException;
-use Http\Client\Socket\Stream;
+use Tarekdj\DockerClient\Exception\StreamException;
+use Tarekdj\DockerClient\Exception\TimeoutException;
+use Tarekdj\DockerClient\Stream;
 use Nyholm\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 

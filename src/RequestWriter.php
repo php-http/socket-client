@@ -1,8 +1,8 @@
 <?php
 
-namespace Http\Client\Socket;
+namespace Tarekdj\DockerClient;
 
-use Http\Client\Socket\Exception\BrokenPipeException;
+use Tarekdj\DockerClient\Exception\BrokenPipeException;
 use Psr\Http\Message\RequestInterface;
 
 /**

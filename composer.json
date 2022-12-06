@@ -39,12 +39,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Http\\Client\\Socket\\": "src/"
+            "Tarekdj\\DockerClient\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Http\\Client\\Socket\\Tests\\": "tests/"
+            "Tarekdj\\DockerClient\\Tests\\": "tests/"
         }
     },
     "scripts": {

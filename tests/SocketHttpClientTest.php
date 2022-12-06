@@ -1,11 +1,11 @@
 <?php
 
-namespace Http\Client\Socket\Tests;
+namespace Tarekdj\DockerClient\Tests;
 
 use Http\Client\Common\HttpMethodsClient;
-use Http\Client\Socket\Client as SocketHttpClient;
-use Http\Client\Socket\Exception\NetworkException;
-use Http\Client\Socket\Exception\TimeoutException;
+use Tarekdj\DockerClient\Client as SocketHttpClient;
+use Tarekdj\DockerClient\Exception\NetworkException;
+use Tarekdj\DockerClient\Exception\TimeoutException;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
 
 class SocketHttpClientTest extends BaseTestCase

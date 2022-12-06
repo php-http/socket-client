@@ -22,4 +22,4 @@ while (!@feof($client)) {
 }
 
 unlink(__DIR__.'/server.sock');
-\Http\Client\Socket\Tests\Semaphore::release();
+\Tarekdj\DockerClient\Tests\Semaphore::release();
