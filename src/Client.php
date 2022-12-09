@@ -108,7 +108,7 @@ class Client implements HttpClient
     {
         $errNo = null;
         $errMsg = null;
-        $socket = @stream_socket_client($remote, $errNo, $errMsg, floor($this->config['timeout'] / 1000), STREAM_CLIENT_CONNECT, $this->config['stream_context']);
+        $socket = @stream_socket_client($remote, $errNo, $errMsg, floor($this->config['timeout'] / 1000), STREAM_CLIENT_CONNECT | $this->config['stream_flags'], $this->config['stream_context']);
 
         if (false === $socket) {
             if (110 === $errNo) {
@@ -142,9 +142,9 @@ class Client implements HttpClient
     /**
      * Return configuration for the socket client.
      *
-     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int} $config
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, stream_flags: ?int, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int} $config
      *
-     * @return array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, ssl: ?boolean, write_buffer_size: int, ssl_method: int}
+     * @return array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, stream_flags: ?int, ssl: ?boolean, write_buffer_size: int, ssl_method: int}
      */
     protected function configure(array $config = [])
     {
@@ -154,6 +154,7 @@ class Client implements HttpClient
             'timeout' => null,
             'stream_context_options' => [],
             'stream_context_param' => [],
+            'stream_flags' => 0,
             'ssl' => null,
             'write_buffer_size' => 8192,
             'ssl_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
@@ -165,6 +166,7 @@ class Client implements HttpClient
 
         $resolver->setAllowedTypes('stream_context_options', 'array');
         $resolver->setAllowedTypes('stream_context_param', 'array');
+        $resolver->setAllowedTypes('stream_flags', 'int');
         $resolver->setAllowedTypes('stream_context', 'resource');
         $resolver->setAllowedTypes('ssl', ['bool', 'null']);
 
