@@ -15,7 +15,9 @@ class DockerTest extends TestCase
         $dockerClient = DockerClientFactory::create();
         $info = $dockerClient->systemInfo();
         $this->assertInstanceOf(SystemInfo::class, $info);
+        $this->assertNotNull($info->getID());
         $version = $dockerClient->systemVersion();
+        $this->assertNotNull($version->getVersion());
         $this->assertInstanceOf(SystemVersion::class, $version);
     }
 }
