@@ -2,7 +2,6 @@
 
 namespace Tarekdj\DockerClient;
 
-use TestContainersPHP\Docker\ApiClient\Client as ApiClient;
 class DockerClientFactory
 {
     public static function create(?string $dockerHost = null, ?bool $ssl = false, ?string $certPath = null): ApiClient

@@ -2,11 +2,10 @@
 
 namespace Tarekdj\DockerClient\Tests;
 
-use Tarekdj\DockerClient\Client;
 use PHPUnit\Framework\TestCase;
+use Tarekdj\Docker\ApiClient\Model\SystemInfo;
+use Tarekdj\Docker\ApiClient\Model\SystemVersion;
 use Tarekdj\DockerClient\DockerClientFactory;
-use TestContainersPHP\Docker\ApiClient\Model\SystemInfo;
-use TestContainersPHP\Docker\ApiClient\Model\SystemVersion;
 
 class DockerTest extends TestCase
 {
@@ -19,5 +18,21 @@ class DockerTest extends TestCase
         $version = $dockerClient->systemVersion();
         $this->assertNotNull($version->getVersion());
         $this->assertInstanceOf(SystemVersion::class, $version);
+    }
+
+    public function testDockerClientGetHost(): void
+    {
+        $dockerClient = DockerClientFactory::create();
+        $this->assertEquals('localhost', $dockerClient->getHost());
+
+        $dockerClient = DockerClientFactory::create('http://remote-docker-host');
+        $this->assertEquals('remote-docker-host', $dockerClient->getHost());
+
+        $dockerClient = DockerClientFactory::create('https://remote-docker-host');
+        $this->assertEquals('remote-docker-host', $dockerClient->getHost());
+
+        putenv('DOCKER_HOST=https://my-remote-docker-host.com');
+        $dockerClient = DockerClientFactory::create();
+        $this->assertEquals('my-remote-docker-host.com', $dockerClient->getHost());
     }
 }

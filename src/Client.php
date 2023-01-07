@@ -93,6 +93,11 @@ class Client implements ClientInterface
         return $this->decodeResponse($response);
     }
 
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     protected function decodeResponse(ResponseInterface $response): ResponseInterface
     {
         $response = $this->decodeOnEncodingHeader('Transfer-Encoding', $response);
