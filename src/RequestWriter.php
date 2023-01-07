@@ -2,8 +2,8 @@
 
 namespace Tarekdj\DockerClient;
 
-use Tarekdj\DockerClient\Exception\BrokenPipeException;
 use Psr\Http\Message\RequestInterface;
+use Tarekdj\DockerClient\Exception\BrokenPipeException;
 
 /**
  * Method for writing request.

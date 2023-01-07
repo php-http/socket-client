@@ -2,10 +2,10 @@
 
 namespace Tarekdj\DockerClient;
 
-use Tarekdj\DockerClient\Exception\StreamException;
-use Tarekdj\DockerClient\Exception\TimeoutException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
+use Tarekdj\DockerClient\Exception\StreamException;
+use Tarekdj\DockerClient\Exception\TimeoutException;
 
 /**
  * Stream implementation for Socket Client.

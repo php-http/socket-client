@@ -2,11 +2,11 @@
 
 namespace Tarekdj\DockerClient\Tests;
 
+use Nyholm\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 use Tarekdj\DockerClient\Exception\StreamException;
 use Tarekdj\DockerClient\Exception\TimeoutException;
 use Tarekdj\DockerClient\Stream;
-use Nyholm\Psr7\Request;
-use PHPUnit\Framework\TestCase;
 
 class StreamTest extends TestCase
 {

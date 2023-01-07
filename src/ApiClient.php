@@ -24,7 +24,5 @@ class ApiClient extends DockerApiClient
             default:
                 return 'localhost';
         }
-
-
     }
 }

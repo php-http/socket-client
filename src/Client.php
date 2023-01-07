@@ -2,10 +2,6 @@
 
 namespace Tarekdj\DockerClient;
 
-use Tarekdj\DockerClient\Exception\ConnectionException;
-use Tarekdj\DockerClient\Exception\InvalidRequestException;
-use Tarekdj\DockerClient\Exception\SSLConnectionException;
-use Tarekdj\DockerClient\Exception\TimeoutException;
 use Http\Message\Encoding\ChunkStream;
 use Http\Message\Encoding\DechunkStream;
 use Http\Message\Encoding\DecompressStream;
@@ -18,6 +14,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tarekdj\DockerClient\Exception\ConnectionException;
+use Tarekdj\DockerClient\Exception\InvalidRequestException;
+use Tarekdj\DockerClient\Exception\SSLConnectionException;
+use Tarekdj\DockerClient\Exception\TimeoutException;
 
 /**
  * Socket Http Client.
@@ -101,6 +101,7 @@ class Client implements ClientInterface
     protected function decodeResponse(ResponseInterface $response): ResponseInterface
     {
         $response = $this->decodeOnEncodingHeader('Transfer-Encoding', $response);
+
         return $this->decodeOnEncodingHeader('Content-Encoding', $response);
     }
 
@@ -187,6 +188,7 @@ class Client implements ClientInterface
         $request = $request->withHeader('Accept-Encoding', $encodings);
 
         $encodings[] = 'chunked';
+
         return $request->withHeader('TE', $encodings);
     }
 
@@ -197,9 +199,9 @@ class Client implements ClientInterface
      * @param string           $remote  Entrypoint for the connection
      * @param bool             $useSsl  Whether to use ssl or not
      *
-     * @throws ConnectionException|SSLConnectionException When the connection fail
-     *
      * @return resource Socket resource
+     *
+     * @throws ConnectionException|SSLConnectionException When the connection fail
      */
     protected function createSocket(RequestInterface $request, string $remote, bool $useSsl)
     {
@@ -271,9 +273,9 @@ class Client implements ClientInterface
     /**
      * Return remote socket from the request.
      *
-     * @throws InvalidRequestException When no remote can be determined from the request
-     *
      * @return string
+     *
+     * @throws InvalidRequestException When no remote can be determined from the request
      */
     private function determineRemoteFromRequest(RequestInterface $request)
     {

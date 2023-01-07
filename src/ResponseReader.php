@@ -2,12 +2,12 @@
 
 namespace Tarekdj\DockerClient;
 
-use Tarekdj\DockerClient\Exception\BrokenPipeException;
-use Tarekdj\DockerClient\Exception\TimeoutException;
 use Http\Message\ResponseFactory;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Tarekdj\DockerClient\Exception\BrokenPipeException;
+use Tarekdj\DockerClient\Exception\TimeoutException;
 
 /**
  * Method for reading response.
