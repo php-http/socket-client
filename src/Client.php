@@ -34,7 +34,7 @@ class Client implements ClientInterface
     /**
      * @var array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, ssl: ?boolean, write_buffer_size: int, ssl_method: int}
      */
-    private $config;
+    private array $config;
 
     /**
      * Constructor.
@@ -123,7 +123,7 @@ class Client implements ClientInterface
                 $response = $response->withBody($stream);
             }
 
-            if (\count($newEncodings) > 0) {
+            if ($newEncodings !== []) {
                 $response = $response->withHeader($headerName, $newEncodings);
             } else {
                 $response = $response->withoutHeader($headerName);
@@ -257,9 +257,7 @@ class Client implements ClientInterface
             'write_buffer_size' => 8192,
             'ssl_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
         ]);
-        $resolver->setDefault('stream_context', function (Options $options) {
-            return stream_context_create($options['stream_context_options'], $options['stream_context_param']);
-        });
+        $resolver->setDefault('stream_context', fn(Options $options) => stream_context_create($options['stream_context_options'], $options['stream_context_param']));
         $resolver->setDefault('timeout', ((int) ini_get('default_socket_timeout')) * 1000);
 
         $resolver->setAllowedTypes('stream_context_options', 'array');
@@ -273,11 +271,10 @@ class Client implements ClientInterface
     /**
      * Return remote socket from the request.
      *
-     * @return string
      *
      * @throws InvalidRequestException When no remote can be determined from the request
      */
-    private function determineRemoteFromRequest(RequestInterface $request)
+    private function determineRemoteFromRequest(RequestInterface $request): string
     {
         if (!$request->hasHeader('Host') && '' === $request->getUri()->getHost()) {
             throw new InvalidRequestException('Remote is not defined and we cannot determine a connection endpoint for this request (no Host header)', $request);

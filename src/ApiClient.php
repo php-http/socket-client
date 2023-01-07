@@ -17,12 +17,9 @@ class ApiClient extends DockerApiClient
         $remote = $this->httpClient->getConfig()['remote_socket'];
         $schema = explode(':', $remote);
 
-        switch ($schema[0] ?? '') {
-            case 'http':
-            case 'https':
-                return (new Uri($remote))->getHost();
-            default:
-                return 'localhost';
-        }
+        return match ($schema[0] ?? '') {
+            'http', 'https' => (new Uri($remote))->getHost(),
+            default => 'localhost',
+        };
     }
 }

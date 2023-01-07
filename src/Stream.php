@@ -23,30 +23,17 @@ use Tarekdj\DockerClient\Exception\TimeoutException;
  *
  * @author Joel Wurtz <joel.wurtz@gmail.com>
  */
-class Stream implements StreamInterface
+class Stream implements StreamInterface, \Stringable
 {
-    /** @var resource|null Underlying socket */
-    private $socket;
-
     /**
      * @var bool Is stream detached
      */
-    private $isDetached = false;
-
-    /**
-     * @var int<0, max>|null Size of the stream, so we know what we must read, null if not available (i.e. a chunked stream)
-     */
-    private $size;
+    private bool $isDetached = false;
 
     /**
      * @var int<0, max> Size of the stream readed, to avoid reading more than available and have the user blocked
      */
-    private $readed = 0;
-
-    /**
-     * @var RequestInterface request associated to this stream
-     */
-    private $request;
+    private int $readed = 0;
 
     /**
      * Create the stream.
@@ -54,21 +41,25 @@ class Stream implements StreamInterface
      * @param resource         $socket
      * @param int<0, max>|null $size
      */
-    public function __construct(RequestInterface $request, $socket, ?int $size = null)
+    public function __construct(
+        /**
+         * @var RequestInterface request associated to this stream
+         */
+        private RequestInterface $request,
+        private $socket,
+        private ?int $size = null
+    )
     {
-        $this->socket = $socket;
-        $this->size = $size;
-        $this->request = $request;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         try {
             return $this->getContents();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return '';
         }
     }
@@ -128,7 +119,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function eof()
+    public function eof(): bool
     {
         if ($this->isDetached || null === $this->socket) {
             throw new StreamException('Stream is detached');
@@ -140,7 +131,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function isSeekable()
+    public function isSeekable(): bool
     {
         return false;
     }
@@ -168,7 +159,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function isWritable()
+    public function isWritable(): bool
     {
         return false;
     }
@@ -184,7 +175,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function isReadable()
+    public function isReadable(): bool
     {
         return true;
     }
