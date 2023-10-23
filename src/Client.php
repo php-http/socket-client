@@ -2,11 +2,11 @@
 
 namespace Http\Client\Socket;
 
-use Http\Client\HttpClient;
 use Http\Client\Socket\Exception\ConnectionException;
 use Http\Client\Socket\Exception\InvalidRequestException;
 use Http\Client\Socket\Exception\SSLConnectionException;
 use Http\Client\Socket\Exception\TimeoutException;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -20,7 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Joel Wurtz <joel.wurtz@gmail.com>
  */
-class Client implements HttpClient
+class Client implements ClientInterface
 {
     use RequestWriter;
     use ResponseReader;
