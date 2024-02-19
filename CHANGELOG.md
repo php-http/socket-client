@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.2.0
+
+ * Allow installation with Symfony 7
+
 ## 2.1.1
 
  * Fixed constructor to work nicely with version 1 style arguments (e.g. HttplugBundle)
