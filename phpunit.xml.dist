@@ -8,7 +8,6 @@
   <testsuites>
     <testsuite name="Socket Client Test Suite">
       <directory>tests/</directory>
-      <exclude>tests/SocketClientFeatureTest.php</exclude>
     </testsuite>
   </testsuites>
   <php>

@@ -61,7 +61,7 @@ class Stream implements StreamInterface
         $this->request = $request;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         try {
             return $this->getContents();
@@ -70,7 +70,7 @@ class Stream implements StreamInterface
         }
     }
 
-    public function close()
+    public function close(): void
     {
         if ($this->isDetached || null === $this->socket) {
             throw new StreamException('Stream is detached');
@@ -93,12 +93,12 @@ class Stream implements StreamInterface
     /**
      * @return int<0, max>|null
      */
-    public function getSize()
+    public function getSize(): ?int
     {
         return $this->size;
     }
 
-    public function tell()
+    public function tell(): int
     {
         if ($this->isDetached || null === $this->socket) {
             throw new StreamException('Stream is detached');
@@ -111,7 +111,7 @@ class Stream implements StreamInterface
         return $tell;
     }
 
-    public function eof()
+    public function eof(): bool
     {
         if ($this->isDetached || null === $this->socket) {
             throw new StreamException('Stream is detached');
@@ -120,38 +120,32 @@ class Stream implements StreamInterface
         return feof($this->socket);
     }
 
-    public function isSeekable()
+    public function isSeekable(): bool
     {
         return false;
     }
 
-    /**
-     * @return void
-     */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek($offset, $whence = SEEK_SET): void
     {
         throw new StreamException('This stream is not seekable');
     }
 
-    /**
-     * @return void
-     */
-    public function rewind()
+    public function rewind(): void
     {
         throw new StreamException('This stream is not seekable');
     }
 
-    public function isWritable()
+    public function isWritable(): bool
     {
         return false;
     }
 
-    public function write($string)
+    public function write($string): int
     {
         throw new StreamException('This stream is not writable');
     }
 
-    public function isReadable()
+    public function isReadable(): bool
     {
         return true;
     }
@@ -159,7 +153,7 @@ class Stream implements StreamInterface
     /**
      * @param int<0, max> $length
      */
-    public function read($length)
+    public function read($length): string
     {
         if ($this->isDetached || null === $this->socket) {
             throw new StreamException('Stream is detached');
@@ -197,7 +191,7 @@ class Stream implements StreamInterface
         return $read;
     }
 
-    public function getContents()
+    public function getContents(): string
     {
         if ($this->isDetached || null === $this->socket) {
             throw new StreamException('Stream is detached');

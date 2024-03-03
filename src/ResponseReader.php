@@ -4,7 +4,6 @@ namespace Http\Client\Socket;
 
 use Http\Client\Socket\Exception\BrokenPipeException;
 use Http\Client\Socket\Exception\TimeoutException;
-use Http\Message\ResponseFactory;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -18,11 +17,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 trait ResponseReader
 {
-    /**
-     * @var ResponseFactory For creating response
-     */
-    protected $responseFactory;
-
     /**
      * Read a response from a socket.
      *
