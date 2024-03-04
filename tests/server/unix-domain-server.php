@@ -22,4 +22,4 @@ while (!@feof($client)) {
 }
 
 unlink(__DIR__.'/server.sock');
-\Http\Client\Socket\Tests\Semaphore::release();
+Http\Client\Socket\Tests\Semaphore::release();

@@ -35,4 +35,4 @@ while (!@feof($client)) {
     @fread($client, 1000);
 }
 
-\Http\Client\Socket\Tests\Semaphore::release();
+Http\Client\Socket\Tests\Semaphore::release();

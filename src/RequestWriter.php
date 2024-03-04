@@ -123,6 +123,7 @@ trait RequestWriter
             // The write worked or failed explicitly. This value is fine to return.
             return $result;
         }
+
         // We performed a 0-length write, were told that the stream was writable, and
         // then immediately performed another 0-length write. Conclude that the pipe
         // is broken and return `false`.

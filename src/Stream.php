@@ -61,9 +61,6 @@ class Stream implements StreamInterface
         $this->request = $request;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString()
     {
         try {
@@ -73,9 +70,6 @@ class Stream implements StreamInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function close()
     {
         if ($this->isDetached || null === $this->socket) {
@@ -84,9 +78,6 @@ class Stream implements StreamInterface
         fclose($this->socket);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function detach()
     {
         if ($this->isDetached) {
@@ -100,8 +91,6 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return int<0, max>|null
      */
     public function getSize()
@@ -109,9 +98,6 @@ class Stream implements StreamInterface
         return $this->size;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function tell()
     {
         if ($this->isDetached || null === $this->socket) {
@@ -125,9 +111,6 @@ class Stream implements StreamInterface
         return $tell;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function eof()
     {
         if ($this->isDetached || null === $this->socket) {
@@ -137,17 +120,12 @@ class Stream implements StreamInterface
         return feof($this->socket);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isSeekable()
     {
         return false;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return void
      */
     public function seek($offset, $whence = SEEK_SET)
@@ -156,8 +134,6 @@ class Stream implements StreamInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return void
      */
     public function rewind()
@@ -165,33 +141,22 @@ class Stream implements StreamInterface
         throw new StreamException('This stream is not seekable');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isWritable()
     {
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write($string)
     {
         throw new StreamException('This stream is not writable');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isReadable()
     {
         return true;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param int<0, max> $length
      */
     public function read($length)
@@ -232,9 +197,6 @@ class Stream implements StreamInterface
         return $read;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContents()
     {
         if ($this->isDetached || null === $this->socket) {
@@ -261,9 +223,6 @@ class Stream implements StreamInterface
         return $contents;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetadata($key = null)
     {
         if ($this->isDetached || null === $this->socket) {

@@ -12,7 +12,7 @@ class NetworkException extends \RuntimeException implements NetworkExceptionInte
      */
     private $request;
 
-    public function __construct(string $message, RequestInterface $request, \Exception $previous = null)
+    public function __construct(string $message, RequestInterface $request, ?\Exception $previous = null)
     {
         $this->request = $request;
 
