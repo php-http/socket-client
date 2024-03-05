@@ -59,9 +59,6 @@ class Client implements HttpClient
         $this->config = $this->configure($config2 ?: $config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
         $remote = $this->config['remote_socket'];
@@ -100,9 +97,9 @@ class Client implements HttpClient
      * @param string           $remote  Entrypoint for the connection
      * @param bool             $useSsl  Whether to use ssl or not
      *
-     * @throws ConnectionException|SSLConnectionException When the connection fail
-     *
      * @return resource Socket resource
+     *
+     * @throws ConnectionException|SSLConnectionException When the connection fail
      */
     protected function createSocket(RequestInterface $request, string $remote, bool $useSsl)
     {
@@ -174,9 +171,9 @@ class Client implements HttpClient
     /**
      * Return remote socket from the request.
      *
-     * @throws InvalidRequestException When no remote can be determined from the request
-     *
      * @return string
+     *
+     * @throws InvalidRequestException When no remote can be determined from the request
      */
     private function determineRemoteFromRequest(RequestInterface $request)
     {

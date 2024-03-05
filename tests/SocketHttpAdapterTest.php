@@ -8,9 +8,6 @@ use Psr\Http\Client\ClientInterface;
 
 class SocketHttpAdapterTest extends HttpClientTest
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function createHttpAdapter(): ClientInterface
     {
         return new SocketHttpClient();
