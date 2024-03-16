@@ -6,15 +6,13 @@ use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Socket\Client as SocketHttpClient;
 use Http\Client\Socket\Exception\NetworkException;
 use Http\Client\Socket\Exception\TimeoutException;
-use Http\Message\MessageFactory\GuzzleMessageFactory;
+use Nyholm\Psr7\Factory\Psr17Factory;
 
 class SocketHttpClientTest extends BaseTestCase
 {
     public function createClient($options = [])
     {
-        $messageFactory = new GuzzleMessageFactory();
-
-        return new HttpMethodsClient(new SocketHttpClient($options), $messageFactory);
+        return new HttpMethodsClient(new SocketHttpClient($options), new Psr17Factory());
     }
 
     public function testTcpSocketDomain()
