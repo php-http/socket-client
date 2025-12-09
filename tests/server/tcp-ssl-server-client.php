@@ -20,13 +20,16 @@ stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLSv1_2_SERVER);
 // Verify client certificate
 $name = null;
 
-if (isset(stream_context_get_options($context)['ssl']['peer_certificate'])) {
-    $client_cert = stream_context_get_options($context)['ssl']['peer_certificate'];
+if (isset(stream_context_get_options($client)['ssl']['peer_certificate'])) {
+    $client_cert = stream_context_get_options($client)['ssl']['peer_certificate'];
     $name = openssl_x509_parse($client_cert)['subject']['CN'];
 }
 
 if ('socket-adapter-client' == $name) {
-    fwrite($client, str_replace("\n", "\r\n", <<<EOR
+    fwrite($client, str_replace(
+        "\n",
+        "\r\n",
+        <<<EOR
 HTTP/1.1 200 OK
 Content-Type: text/plain
 
@@ -34,7 +37,10 @@ Test
 EOR
     ));
 } else {
-    fwrite($client, str_replace("\n", "\r\n", <<<EOR
+    fwrite($client, str_replace(
+        "\n",
+        "\r\n",
+        <<<EOR
 HTTP/1.1 403 Invalid ssl certificate
 Content-Type: text/plain
 

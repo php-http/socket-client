@@ -10,18 +10,18 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 
 class SocketHttpClientTest extends BaseTestCase
 {
-    public function createClient($options = [])
+    public function createClient($options = []): HttpMethodsClient
     {
         return new HttpMethodsClient(new SocketHttpClient($options), new Psr17Factory());
     }
 
-    public function testTcpSocketDomain()
+    public function testTcpSocketDomain(): void
     {
         $this->startServer('tcp-server');
         $client = $this->createClient(['remote_socket' => '127.0.0.1:19999']);
         $response = $client->get('/', []);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testNoRemote(): void
@@ -37,7 +37,7 @@ class SocketHttpClientTest extends BaseTestCase
         $client = $this->createClient();
         $response = $client->get('http://127.0.0.1:19999/', []);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testRemoteInHostHeader(): void
@@ -46,8 +46,7 @@ class SocketHttpClientTest extends BaseTestCase
         $client = $this->createClient();
         $response = $client->get('/', ['Host' => '127.0.0.1:19999']);
 
-        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testBrokenSocket(): void
@@ -71,10 +70,9 @@ class SocketHttpClientTest extends BaseTestCase
                 ],
             ],
         ]);
-        $response = $client->get('/', []);
+        $response = $client->get('/');
 
-        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testUnixSocketDomain(): void
@@ -86,7 +84,7 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testNetworkExceptionOnConnectError(): void
@@ -112,7 +110,7 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testSslConnectionWithClientCertificate(): void
@@ -132,7 +130,7 @@ class SocketHttpClientTest extends BaseTestCase
         ]);
         $response = $client->get('/', []);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testInvalidSslConnectionWithClientCertificate(): void
