@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.4.0
+
+* Allow installation with Symfony 8.
+* Cleaned up testing and use the integration tests version 4.
+
 ## 2.3.0
 
  * Fixed compatibility with `psr/http-message` v2
