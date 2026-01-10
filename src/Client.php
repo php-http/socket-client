@@ -10,6 +10,7 @@ use Http\Client\Socket\Exception\TimeoutException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,16 +29,16 @@ class Client implements HttpClient
     use ResponseReader;
 
     /**
-     * @var array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, ssl: ?boolean, write_buffer_size: int, ssl_method: int}
+     * @var array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, ssl: ?bool, write_buffer_size: int, ssl_method: int}
      */
     private $config;
 
     /**
      * Constructor.
      *
-     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}|ResponseFactoryInterface $config1
-     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}|null                     $config2 Mistake when refactoring the constructor from version 1 to version 2 - used as $config if set and $configOrResponseFactory is a response factory instance
-     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int}                          $config  intended for version 1 BC, used as $config if $config2 is not set and $configOrResponseFactory is a response factory instance
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?bool, write_buffer_size?: int, ssl_method?: int}|ResponseFactoryInterface $config1
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?bool, write_buffer_size?: int, ssl_method?: int}|null                     $config2 Mistake when refactoring the constructor from version 1 to version 2 - used as $config if set and $configOrResponseFactory is a response factory instance
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?bool, write_buffer_size?: int, ssl_method?: int}                          $config  intended for version 1 BC, used as $config if $config2 is not set and $configOrResponseFactory is a response factory instance
      *
      * string|null          remote_socket          Remote entrypoint (can be a tcp or unix domain address)
      * int                  timeout                Timeout before canceling request
@@ -110,6 +111,7 @@ class Client implements HttpClient
         $socket = @stream_socket_client($remote, $errNo, $errMsg, floor($this->config['timeout'] / 1000), STREAM_CLIENT_CONNECT, $this->config['stream_context']);
 
         if (false === $socket) {
+            $errMsg = $errMsg ?: '[no message set]';
             if (110 === $errNo) {
                 throw new TimeoutException($errMsg, $request);
             }
@@ -120,7 +122,13 @@ class Client implements HttpClient
         stream_set_timeout($socket, (int) floor($this->config['timeout'] / 1000), $this->config['timeout'] % 1000);
 
         if ($useSsl && false === @stream_socket_enable_crypto($socket, true, $this->config['ssl_method'])) {
-            throw new SSLConnectionException(sprintf('Cannot enable tls: %s', error_get_last()['message'] ?? 'no error reported'), $request);
+            $errorMessage = error_get_last()['message'] ?? 'no error reported';
+            $opensslErrors = $this->collectOpenSslErrors();
+            if ('' !== $opensslErrors) {
+                $errorMessage .= '; '.$opensslErrors;
+            }
+
+            throw new SSLConnectionException(sprintf('Cannot enable tls method %s: %s', $this->config['ssl_method'], $errorMessage), $request);
         }
 
         return $socket;
@@ -139,11 +147,24 @@ class Client implements HttpClient
     }
 
     /**
+     * Collect and format OpenSSL error queue entries, if available.
+     */
+    private function collectOpenSslErrors(): string
+    {
+        $errors = [];
+        while (false !== ($error = openssl_error_string())) {
+            $errors[] = $error;
+        }
+
+        return implode(' | ', $errors);
+    }
+
+    /**
      * Return configuration for the socket client.
      *
-     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?boolean, write_buffer_size?: int, ssl_method?: int} $config
+     * @param array{remote_socket?: string|null, timeout?: int, stream_context?: resource, stream_context_options?: array<string, mixed>, stream_context_param?: array<string, mixed>, ssl?: ?bool, write_buffer_size?: int, ssl_method?: int} $config
      *
-     * @return array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, ssl: ?boolean, write_buffer_size: int, ssl_method: int}
+     * @return array{remote_socket: string|null, timeout: int, stream_context: resource, stream_context_options: array<string, mixed>, stream_context_param: array<string, mixed>, ssl: ?bool, write_buffer_size: int, ssl_method: int}
      */
     protected function configure(array $config = [])
     {
@@ -167,7 +188,12 @@ class Client implements HttpClient
         $resolver->setAllowedTypes('stream_context', 'resource');
         $resolver->setAllowedTypes('ssl', ['bool', 'null']);
 
-        return $resolver->resolve($config);
+        $configuration = $resolver->resolve($config);
+        if ($configuration['ssl'] && !function_exists('openssl_error_string')) {
+            throw new InvalidOptionsException('You can not enable ssl when ext-openssl is not installed');
+        }
+
+        return $configuration;
     }
 
     /**

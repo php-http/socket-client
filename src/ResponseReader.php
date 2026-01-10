@@ -39,7 +39,7 @@ trait ResponseReader
 
         $metadatas = stream_get_meta_data($socket);
 
-        if (array_key_exists('timed_out', $metadatas) && true === $metadatas['timed_out']) {
+        if ($metadatas['timed_out']) {
             throw new TimeoutException('Error while reading response, stream timed out', $request, null);
         }
         $header = array_shift($headers);

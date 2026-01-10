@@ -24,6 +24,7 @@ jobs:
     needs:
       - supported-versions-matrix
     strategy:
+      fail-fast: false
       matrix:
         php: ${{ fromJson(needs.supported-versions-matrix.outputs.version) }}
 
@@ -56,6 +57,7 @@ jobs:
     needs:
       - supported-versions-matrix
     strategy:
+      fail-fast: false
       matrix:
         php: ${{ fromJson(needs.supported-versions-matrix.outputs.version) }}
 
@@ -81,30 +83,3 @@ jobs:
 
       - name: Execute tests
         run: composer test
-
-  coverage:
-    name: Code Coverage
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-          tools: composer
-          coverage: xdebug
-
-      - name: Install dependencies
-        run: composer update --prefer-dist --no-interaction --no-progress
-
-      - name: generate ssl
-        run: cd ./tests/server/ssl && ./generate.sh && pwd && ls -la && cd ../../../
-
-      - name: boot test server
-        run: vendor/bin/http_test_server > /dev/null 2>&1 &
-
-      - name: Execute tests
-        run: composer test-ci
